@@ -1,4 +1,4 @@
-cask "messenger" do
+cask "facebook-messenger-desktop" do
   version "0.1.9"
 
   on_arm do
