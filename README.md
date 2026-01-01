@@ -5,7 +5,7 @@ A Homebrew tap for personal applications.
 ## Installation
 
 ```bash
-brew tap apotenza92/brew
+brew tap apotenza92/tap
 ```
 
 ## Available Casks
@@ -15,7 +15,7 @@ brew tap apotenza92/brew
 A desktop client for Facebook Messenger.
 
 ```bash
-brew install --cask apotenza92/brew/messenger
+brew install --cask apotenza92/tap/messenger
 ```
 
 Or after tapping:
