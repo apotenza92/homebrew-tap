@@ -1,13 +1,13 @@
 cask "facebook-messenger-desktop" do
-  version "1.2.1"
+  version "1.2.2"
 
   on_arm do
-    sha256 "38af6426138c6321cad57d66645cbc937ea93809e9748bff802133c493e32adf"
+    sha256 "57349c68501e6736dbc422d44dfa075c3251fcd2045d4333a4bcfe8534cfac76"
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases/download/v#{version}/Messenger-macos-arm64.zip"
   end
 
   on_intel do
-    sha256 "2506778df9020365ca412b02471826fc7f7dd287cb3874e1912cd7c12e374dfd"
+    sha256 "f89c274363a727da37b605958f2baae9567e142cfa260c8e43062c0ae0dd8e21"
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases/download/v#{version}/Messenger-macos-x64.zip"
   end
 
@@ -23,7 +23,7 @@ cask "facebook-messenger-desktop" do
   app "Messenger.app"
 
   zap trash: [
-    "~/Library/Application Support/facebook-messenger-desktop",
+    "~/Library/Application Support/Messenger",
     "~/Library/Caches/com.facebook.messenger.desktop",
     "~/Library/Caches/com.facebook.messenger.desktop.ShipIt",
     "~/Library/Preferences/com.facebook.messenger.desktop.plist",
