@@ -1,36 +1,46 @@
 # Homebrew Tap
 
-A Homebrew tap for personal applications.
+Homebrew tap for desktop applications published by `apotenza92`.
 
-## Available Casks
-
-### Facebook Messenger Desktop
-
-A desktop client for Facebook Messenger.
-
-#### Stable (Recommended)
+## Add this tap
 
 ```bash
-brew install --cask apotenza92/tap/facebook-messenger-desktop
+brew tap apotenza92/tap
 ```
 
-#### Beta (Early Access)
-
-Get early access to new features and bug fixes. Beta versions may be less stable.
+## Install a cask
 
 ```bash
-brew install --cask apotenza92/tap/facebook-messenger-desktop@beta
+brew install --cask apotenza92/tap/<cask-name>
 ```
 
-> **Note:** You can only have one version installed at a time. To switch channels, uninstall the current version first:
-> ```bash
-> brew uninstall --cask facebook-messenger-desktop  # or facebook-messenger-desktop@beta
-> ```
-
-## Updating
+## Available examples
 
 ```bash
-brew upgrade --cask facebook-messenger-desktop
-# or
-brew upgrade --cask facebook-messenger-desktop@beta
+brew install --cask apotenza92/tap/butterpaper
+brew install --cask apotenza92/tap/butterpaper@beta
 ```
+
+## Upgrade casks
+
+```bash
+brew upgrade --cask
+```
+
+Or for a single cask:
+
+```bash
+brew upgrade --cask butterpaper
+```
+
+## Uninstall
+
+```bash
+brew uninstall --cask butterpaper
+```
+
+## Notes
+
+- Casks in this repo are updated from release automation.
+- Use `@beta` tokens when a beta channel cask is available.
+
