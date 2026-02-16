@@ -1,5 +1,5 @@
 cask "dock-actioner" do
-  version "0.0.1"
+  version "0.0.2"
   sha256 :no_check
 
   on_arm do

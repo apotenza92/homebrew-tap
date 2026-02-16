@@ -1,13 +1,13 @@
 cask "dock-actioner@beta" do
-  version "0.0.1"
+  version "0.0.2"
   sha256 :no_check
 
   on_arm do
-    url "https://github.com/apotenza92/dock-actioner/releases/download/v#{version}/DockActioner-v#{version}-macos-arm64.zip"
+    url "https://github.com/apotenza92/dock-actioner/releases/download/v#{version}/DockActioner-Beta-v#{version}-macos-arm64.zip"
   end
 
   on_intel do
-    url "https://github.com/apotenza92/dock-actioner/releases/download/v#{version}/DockActioner-v#{version}-macos-x64.zip"
+    url "https://github.com/apotenza92/dock-actioner/releases/download/v#{version}/DockActioner-Beta-v#{version}-macos-x64.zip"
   end
 
   name "DockActioner Beta"
@@ -23,12 +23,12 @@ cask "dock-actioner@beta" do
     end
   end
 
-  app "DockActioner.app"
+  app "DockActioner Beta.app"
 
   zap trash: [
-    "~/Library/Application Support/DockActioner",
-    "~/Library/Caches/pzc.DockActioner",
-    "~/Library/Preferences/pzc.DockActioner.plist",
-    "~/Library/Saved Application State/pzc.DockActioner.savedState",
+    "~/Library/Application Support/DockActioner Beta",
+    "~/Library/Caches/pzc.DockActioner.beta",
+    "~/Library/Preferences/pzc.DockActioner.beta.plist",
+    "~/Library/Saved Application State/pzc.DockActioner.beta.savedState",
   ]
 end
