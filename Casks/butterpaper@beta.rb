@@ -1,5 +1,5 @@
 cask "butterpaper@beta" do
-  version "0.0.5"
+  version "0.0.7"
   sha256 :no_check
 
   on_arm do
