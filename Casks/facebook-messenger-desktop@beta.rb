@@ -1,13 +1,13 @@
 cask "facebook-messenger-desktop@beta" do
-  version "1.2.7-beta.1"
+  version "1.2.7"
 
   on_arm do
-    sha256 "6e71ad99fe0b4e3200b2d51dd9ca2ee9940bd7e67bcaf23e3a571b06888c20e3"
+    sha256 "576724f6d200fb69d698fdf2eb25ccc08f1c744e0cb5bcc7df7292016b73e22e"
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases/download/v#{version}/Messenger-Beta-macos-arm64.zip"
   end
 
   on_intel do
-    sha256 "3ab15333a498071e81d4508b4987c37fdb93c08349388db171a2946c52eb6419"
+    sha256 "123c09885643371c3abeb2bcfef304f43de0e572e65c1611a60525cb50c15594"
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases/download/v#{version}/Messenger-Beta-macos-x64.zip"
   end
 
@@ -17,7 +17,7 @@ cask "facebook-messenger-desktop@beta" do
 
   livecheck do
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases"
-    regex(/v?(\d+(?:\.\d+)*-(?:alpha|beta|rc)[\w.]*)/i)
+    regex(/v?(\d+(?:\.\d+)*(?:-(?:alpha|beta|rc)[\w.]*)?)/i)
     strategy :page_match
   end
 
