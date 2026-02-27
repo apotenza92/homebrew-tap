@@ -1,14 +1,14 @@
 cask "docktor@beta" do
-  version "0.0.12"
+  version "0.0.13"
 
   on_arm do
-    url "https://github.com/apotenza92/docktor/releases/download/v0.0.12/Docktor-Beta-v0.0.12-macos-arm64.zip"
-    sha256 "6176f2e6aea9e282f27e18a230e31ded286e5cb39d5c38625783548579561348"
+    url "https://github.com/apotenza92/docktor/releases/download/v0.0.13/Docktor-Beta-v0.0.13-macos-arm64.zip"
+    sha256 "0b8dddcd97c560480e3813774102b78cd971ceeaf43aea0bb658881cc44c133c"
   end
 
   on_intel do
-    url "https://github.com/apotenza92/docktor/releases/download/v0.0.12/Docktor-Beta-v0.0.12-macos-x64.zip"
-    sha256 "721ab347aec7713f9f7c207d9ca46fab7a86d9be3937be336d311874d620006b"
+    url "https://github.com/apotenza92/docktor/releases/download/v0.0.13/Docktor-Beta-v0.0.13-macos-x64.zip"
+    sha256 "3ac165bc1629f16652738cc080f7b675d611b598c875fee903ceb875bb789b2b"
   end
 
   name "Docktor Beta"
