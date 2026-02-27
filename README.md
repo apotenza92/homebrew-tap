@@ -17,8 +17,8 @@ brew install --cask apotenza92/tap/<cask-name>
 ## Available examples
 
 ```bash
-brew install --cask apotenza92/tap/butterpaper
-brew install --cask apotenza92/tap/butterpaper@beta
+brew install --cask apotenza92/tap/facebook-messenger-desktop
+brew install --cask apotenza92/tap/facebook-messenger-desktop@beta
 ```
 
 ## Upgrade casks
@@ -30,13 +30,13 @@ brew upgrade --cask
 Or for a single cask:
 
 ```bash
-brew upgrade --cask butterpaper
+brew upgrade --cask <cask-name>
 ```
 
 ## Uninstall
 
 ```bash
-brew uninstall --cask butterpaper
+brew uninstall --cask <cask-name>
 ```
 
 ## Notes
