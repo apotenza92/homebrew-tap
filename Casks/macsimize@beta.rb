@@ -1,14 +1,14 @@
 cask "macsimize@beta" do
-  version "0.2.5"
+  version "0.2.6"
 
   on_arm do
-    url "https://github.com/apotenza92/macsimize/releases/download/v0.2.5/Macsimize-Beta-v0.2.5-macos-arm64.zip"
-    sha256 "3382c2216df1b4a10e1deb97ae305cc683621b646df8c5faa69ade667736e097"
+    url "https://github.com/apotenza92/macsimize/releases/download/v0.2.6/Macsimize-Beta-v0.2.6-macos-arm64.zip"
+    sha256 "eb7bc4ba674470a644a61b80c48c7d2f863d153d60d7595d41e5b32b9d9bc72c"
   end
 
   on_intel do
-    url "https://github.com/apotenza92/macsimize/releases/download/v0.2.5/Macsimize-Beta-v0.2.5-macos-x64.zip"
-    sha256 "5f65ee83862672cd169d4f8f7ad7e3d31e8e5790965c204243d32288ffcf0b46"
+    url "https://github.com/apotenza92/macsimize/releases/download/v0.2.6/Macsimize-Beta-v0.2.6-macos-x64.zip"
+    sha256 "3db328f3a6b9e03828bd0d24b50a4f42446fa51f33bbae10e90f9f468dbd1a00"
   end
 
   name "Macsimize Beta"
