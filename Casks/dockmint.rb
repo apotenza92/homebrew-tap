@@ -1,4 +1,4 @@
-cask "docktor" do
+cask "dockmint" do
   version "0.2.1"
 
   on_arm do
@@ -12,7 +12,7 @@ cask "docktor" do
   end
 
   name "Dockmint"
-  desc "Legacy alias for Dockmint"
+  desc "Dock gesture actions for macOS"
   homepage "https://github.com/apotenza92/dockmint"
 
   livecheck do

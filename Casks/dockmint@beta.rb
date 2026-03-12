@@ -1,4 +1,4 @@
-cask "docktor@beta" do
+cask "dockmint@beta" do
   version "0.2.2-beta.1"
 
   on_arm do
@@ -12,7 +12,7 @@ cask "docktor@beta" do
   end
 
   name "Dockmint Beta"
-  desc "Legacy beta alias for Dockmint"
+  desc "Beta channel for Dockmint"
   homepage "https://github.com/apotenza92/dockmint"
 
   livecheck do
