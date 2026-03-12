@@ -1,13 +1,13 @@
 cask "facebook-messenger-desktop@beta" do
-  version "1.3.0-beta.26"
+  version "1.3.0-beta.27"
 
   on_arm do
-    sha256 "f250b8ae5c178d0ae469304340e2c175fac20ae4e6aa2a56afc8b7d69d6a43be"
+    sha256 "bb08b6bad67881df5e585036a65fe36955736a776b737d71528347ec13d3b84e"
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases/download/v#{version}/Messenger-Beta-macos-arm64.zip"
   end
 
   on_intel do
-    sha256 "fa9c6e36260e08b16803e912cb06c933dc5fda1730e6d7db2d83a1d65bac7283"
+    sha256 "88425ef8997f6a5dc01f08198fd765853dd5bf5848d3c8fdf5a4e55de72aaae8"
     url "https://github.com/apotenza92/facebook-messenger-desktop/releases/download/v#{version}/Messenger-Beta-macos-x64.zip"
   end
 
