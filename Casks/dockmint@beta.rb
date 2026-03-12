@@ -3,12 +3,12 @@ cask "dockmint@beta" do
 
   on_arm do
     url "https://github.com/apotenza92/dockmint/releases/download/v0.2.2-beta.2/Dockmint-Beta-v0.2.2-beta.2-macos-arm64.zip"
-    sha256 "305c77088d3f0f5d173a3ea89c9c4583ca378ddf5cd0eaff82a50f98b71ae8ba"
+    sha256 "86bb72ef689ac74383741f3451f3291c4a0296771ac566f287939f5b247e8d30"
   end
 
   on_intel do
     url "https://github.com/apotenza92/dockmint/releases/download/v0.2.2-beta.2/Dockmint-Beta-v0.2.2-beta.2-macos-x64.zip"
-    sha256 "2480917fc18df96e41e52a4f01811d5cc59a7e7ec220b9b8aa5691050266d0d7"
+    sha256 "623ea7a2f34379789780b65aba3c1d91245377814899ef7577104455b05e927a"
   end
 
   name "Dockmint Beta"
