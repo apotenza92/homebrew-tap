@@ -1,14 +1,14 @@
 cask "dockmint" do
-  version "0.2.6"
+  version "0.2.8"
 
   on_arm do
-    url "https://github.com/apotenza92/dockmint/releases/download/v0.2.6/Dockmint-v0.2.6-macos-arm64.zip"
-    sha256 "0961c69dab61f58d3f01ab6ba82e3b7fc3eb00044b1312bbffca0ed531432155"
+    url "https://github.com/apotenza92/dockmint/releases/download/v0.2.8/Dockmint-v0.2.8-macos-arm64.zip"
+    sha256 "1b2511aab343646a79f028d7ca94000b062d2e9d2d68358e63218b1613c18e42"
   end
 
   on_intel do
-    url "https://github.com/apotenza92/dockmint/releases/download/v0.2.6/Dockmint-v0.2.6-macos-x64.zip"
-    sha256 "468a37aa583b37b734c2dfe561255337052cf97fc7983fec66fc61386b21be51"
+    url "https://github.com/apotenza92/dockmint/releases/download/v0.2.8/Dockmint-v0.2.8-macos-x64.zip"
+    sha256 "c4212a897e129bcc3cc5c61e36ca2b1d5d44c12855517472656ec33059f755ce"
   end
 
   name "Dockmint"
@@ -27,9 +27,12 @@ cask "dockmint" do
     "~/Library/Application Support/Docktor",
     "~/Library/Caches/pzc.Dockter",
     "~/Library/Caches/pzc.Dockmint",
+    "~/Library/Logs/Dockmint",
     "~/Library/Preferences/pzc.Dockter.plist",
     "~/Library/Preferences/pzc.Dockmint.plist",
     "~/Library/Saved Application State/pzc.Dockter.savedState",
     "~/Library/Saved Application State/pzc.Dockmint.savedState",
+    "~/Code/Dockmint/logs",
+    "~/Code/Docktor/logs",
   ]
 end
