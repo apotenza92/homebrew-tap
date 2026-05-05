@@ -1,14 +1,14 @@
 cask "dockmint" do
-  version "0.3.2"
+  version "0.3.3"
 
   on_arm do
-    url "https://github.com/apotenza92/dockmint/releases/download/v0.3.2/Dockmint-v0.3.2-macos-arm64.zip"
-    sha256 "91561aaa7f422c9023e64de54155d67d8b9e0ae58b9ef31403f7739e66f714ac"
+    url "https://github.com/apotenza92/dockmint/releases/download/v0.3.3/Dockmint-v0.3.3-macos-arm64.zip"
+    sha256 "a271c0146b7f3b329d09b45a5f71820af22924b6443eaa97075802128c72cad7"
   end
 
   on_intel do
-    url "https://github.com/apotenza92/dockmint/releases/download/v0.3.2/Dockmint-v0.3.2-macos-x64.zip"
-    sha256 "21eb84b006e7c18d8fc484747bfb79596f57c611f5fa89435ddaec211843f0e3"
+    url "https://github.com/apotenza92/dockmint/releases/download/v0.3.3/Dockmint-v0.3.3-macos-x64.zip"
+    sha256 "dd3439f5e576b951f2227561aae9cb6b3b8de44d020d9a02d02d0d72b4f5d6d5"
   end
 
   name "Dockmint"
