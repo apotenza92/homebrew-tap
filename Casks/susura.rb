@@ -1,9 +1,9 @@
 cask "susura" do
-  version "0.1.11"
+  version "0.1.12"
 
   on_arm do
     url "https://github.com/apotenza92/susura/releases/download/v#{version}/Susura-macos-arm64.zip"
-    sha256 "552198eceab728cff6ac9fad45924fbe87a1a94ad76b710784557303e76c33ce"
+    sha256 "b6f79dc0ea8725131c601b426126d97887962664a72af8be19d32b6035b9c38a"
   end
 
   name "Susura"
