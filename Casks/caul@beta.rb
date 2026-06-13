@@ -1,9 +1,9 @@
 cask "caul@beta" do
-  version "0.1.20"
+  version "0.1.21"
 
   on_arm do
     url "https://github.com/apotenza92/caul/releases/download/v#{version}/Caul-Beta-macos-arm64.zip"
-    sha256 "6352a67fc5a5d8aa3a9ef21a77ab35fc7704e444ec02c36db82bb6a5c4fa5ae7"
+    sha256 "6b12c70d8386fe1bbcdc26aa0ac35bc8172b0304379a0409bdbc5429d1806c40"
   end
 
   name "Caul Beta"
