@@ -1,15 +1,15 @@
 cask "butter-paper" do
-  version "0.0.3"
+  version "0.0.6"
 
   on_arm do
-    sha256 "19c84309e9f2186fb2d26a4310512760e66d1cd3fda4103dc326a96f38530abe"
+    sha256 "8bd1830316ef245f5fda813b71b73c4b4d8c8839cb730525f6ae28ce821075b9"
 
-    url "https://github.com/apotenza92/butter-paper/releases/download/v0.0.3/Butter-Paper-macOS-arm64.zip"
+    url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-macOS-arm64.zip"
   end
   on_intel do
-    sha256 "3288a7d612e968df9c6f99f920e10b1fc9143b7b92e48ef04442586ad9f5d8a8"
+    sha256 "15544b63e87975a45353bf0bda448e171ffd68f49d451a3a932c128d0d4574a8"
 
-    url "https://github.com/apotenza92/butter-paper/releases/download/v0.0.3/Butter-Paper-macOS-x64.zip"
+    url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-macOS-x64.zip"
   end
 
   name "Butter Paper"
@@ -21,7 +21,7 @@ cask "butter-paper" do
   end
 
   auto_updates true
-  depends_on :macos
+  depends_on macos: :monterey
 
   app "Butter Paper.app"
 
