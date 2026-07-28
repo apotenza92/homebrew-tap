@@ -1,9 +1,10 @@
 cask "caul@beta" do
-  version "0.1.21"
+  version "0.1.42"
 
   on_arm do
+    sha256 "8ff6a6efedced2bc2fce045f9f93a55d5cf74158028ce932359a4698373b7bb7"
+
     url "https://github.com/apotenza92/caul/releases/download/v#{version}/Caul-Beta-macos-arm64.zip"
-    sha256 "6b12c70d8386fe1bbcdc26aa0ac35bc8172b0304379a0409bdbc5429d1806c40"
   end
 
   name "Caul Beta"
@@ -15,9 +16,11 @@ cask "caul@beta" do
     strategy :json do |json|
       json
         .reject { |release| release["draft"] }
-        .map { |release| release["tag_name"] }
+        .map { |release| release["tag_name"].delete_prefix("v") }
     end
   end
+
+  depends_on macos: :sonoma
 
   app "Caul Beta.app"
 
