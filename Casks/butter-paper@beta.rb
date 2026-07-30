@@ -1,13 +1,13 @@
 cask "butter-paper@beta" do
-  version "0.0.11"
+  version "0.0.13"
 
   on_arm do
-    sha256 "40155ccdb62ff6712ffb5fbcb801cf15a954ef0bfe35ae1ffe0a417d547ce9f3"
+    sha256 "20abee363b9f4815f9f4c7325f2f2b8418b255b4b65bc87feb187968ff9552ea"
 
     url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-Beta-macOS-arm64.zip"
   end
   on_intel do
-    sha256 "afa5c1a229101c2632b6299a4976c95a6757ac570c8b695597c3afbc1f5a2bcd"
+    sha256 "c818ce1a23aa28d2fc3e101cf1c52a99207e6a70cee5b28b5e72b9eea928cacd"
 
     url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-Beta-macOS-x64.zip"
   end
