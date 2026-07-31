@@ -41,6 +41,8 @@ brew uninstall --cask <cask-name>
 
 ## Notes
 
-- Casks in this repo are updated from release automation.
+- Messenger stable and beta casks are checked every six hours by trusted tap
+  automation. New macOS archives must match GitHub's published SHA-256 digests
+  and pass architecture, signature, hardened runtime, notarization, stapling,
+  and Gatekeeper checks before the casks are updated.
 - Use `@beta` tokens when a beta channel cask is available.
-

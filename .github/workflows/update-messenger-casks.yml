@@ -1,0 +1,52 @@
+name: Update Messenger casks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-messenger-casks
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Verify releases and update casks
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out tap
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Check for verified Messenger releases
+        run: ./scripts/update-messenger-casks.sh
+
+      - name: Validate casks
+        run: |
+          ruby -c Casks/facebook-messenger-desktop.rb
+          ruby -c Casks/facebook-messenger-desktop@beta.rb
+          brew style Casks/facebook-messenger-desktop.rb
+          brew style Casks/facebook-messenger-desktop@beta.rb
+          git diff --check
+
+      - name: Commit an update
+        run: |
+          git add \
+            Casks/facebook-messenger-desktop.rb \
+            Casks/facebook-messenger-desktop@beta.rb
+          if git diff --cached --quiet; then
+            echo "Messenger casks are already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "messenger: update casks from verified releases"
+          git push origin HEAD:main
