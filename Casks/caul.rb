@@ -1,8 +1,8 @@
 cask "caul" do
-  version "0.1.43"
+  version "0.1.74"
 
   on_arm do
-    sha256 "cba8e09d1dcbd2271b617b04ba0968856266f96466d57b9f143214a4c20068ca"
+    sha256 "4c3466e7b5178660b2a55ddf140182c190a021614ebb051b1fc6293d402a66b3"
 
     url "https://github.com/apotenza92/caul/releases/download/v#{version}/Caul-macos-arm64.zip"
   end
