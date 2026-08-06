@@ -31,6 +31,7 @@ def main():
     commit=ref["sha"] if ref["type"]=="commit" else gh(f"repos/{entry['repository']}/git/tags/{ref['sha']}")["object"]["sha"]
     comparison=gh(f"repos/{entry['repository']}/compare/{commit}...main")
     if comparison["status"] not in ("ahead","identical"): raise SystemExit("tag commit is not reachable from main")
-    if digest(cask)!=before or subprocess.run(["git","diff","--quiet","--",str(cask)],cwd=ROOT).returncode: raise SystemExit("verification mutated the cask")
+    if digest(cask)!=before: raise SystemExit("verification mutated the cask")
+    if (ROOT/".git").exists() and subprocess.run(["git","diff","--quiet","--",str(cask)],cwd=ROOT).returncode: raise SystemExit("verification mutated the checkout")
     print(json.dumps({"product":a.product,"channel":a.channel,"tag":tag,"cask":name,"commit":commit,"release_immutable":immutable_supported,"no_op":True},sort_keys=True))
 if __name__=="__main__": main()
