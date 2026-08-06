@@ -1,0 +1,46 @@
+name: Verify current immutable Homebrew publication
+run-name: ${{ github.event.client_payload.correlation_id || format('manual-current-proof-{0}', github.run_id) }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      product:
+        required: true
+        type: choice
+        options: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia]
+      channel:
+        required: true
+        type: choice
+        options: [stable, beta]
+  repository_dispatch:
+    types: [verify-current-homebrew-v1]
+
+concurrency:
+  group: tap-homebrew-publication
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate dispatch shape
+        if: github.event_name == 'repository_dispatch'
+        env:
+          PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+        run: |
+          jq -e 'keys | sort == ["channel","correlation_id","product"]' <<<"$PAYLOAD"
+          jq -er '.correlation_id | select(test("^[A-Za-z0-9._:/@+-]{1,240}$"))' <<<"$PAYLOAD"
+      - name: Verify immutable public bytes and exact no-op
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRODUCT: ${{ github.event.client_payload.product || inputs.product }}
+          CHANNEL: ${{ github.event.client_payload.channel || inputs.channel }}
+        run: python3 scripts/verify-current-homebrew.py --product "$PRODUCT" --channel "$CHANNEL"
+      - name: Prove repository remained unchanged
+        run: git diff --exit-code && test -z "$(git status --porcelain)"
