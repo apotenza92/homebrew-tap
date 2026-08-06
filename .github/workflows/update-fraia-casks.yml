@@ -1,0 +1,61 @@
+name: Update Fraia casks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-fraia-casks
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Verify releases and update casks
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      GH_TOKEN: ${{ github.token }}
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out tap
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Register checkout as the Homebrew tap
+        run: |
+          TAP_PATH="$(brew --repository)/Library/Taps/apotenza92/homebrew-tap"
+          mkdir -p "$(dirname "$TAP_PATH")"
+          ln -s "$GITHUB_WORKSPACE" "$TAP_PATH"
+
+      - name: Check for verified Fraia releases
+        run: ./scripts/update-fraia-casks.sh
+
+      - name: Validate casks
+        run: |
+          ruby -c Casks/fraia.rb
+          ruby -c Casks/fraia@beta.rb
+          brew style Casks/fraia.rb
+          brew style Casks/fraia@beta.rb
+          brew audit --cask --strict --online apotenza92/tap/fraia
+          brew audit --cask --strict --online apotenza92/tap/fraia@beta
+          git diff --check
+
+      - name: Commit an update
+        run: |
+          git add \
+            Casks/fraia.rb \
+            Casks/fraia@beta.rb
+          if git diff --cached --quiet; then
+            echo "Fraia casks are already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fraia: update casks from verified releases"
+          git push origin HEAD:main
