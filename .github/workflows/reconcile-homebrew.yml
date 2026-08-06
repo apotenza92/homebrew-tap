@@ -1,0 +1,24 @@
+name: Reconcile all Homebrew casks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "19 * * * *"
+
+permissions:
+  contents: read
+  actions: read
+  attestations: read
+
+jobs:
+  reconcile:
+    strategy:
+      fail-fast: false
+      matrix:
+        product: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia]
+        channel: [stable, beta]
+    uses: ./.github/workflows/reconcile-product.yml
+    with:
+      product: ${{ matrix.product }}
+      channel: ${{ matrix.channel }}
+    secrets: inherit

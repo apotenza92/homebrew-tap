@@ -1,0 +1,44 @@
+name: Reconcile one Homebrew product channel
+
+on:
+  workflow_call:
+    inputs:
+      product: {required: true, type: string}
+      channel: {required: true, type: string}
+
+permissions:
+  contents: read
+  actions: read
+  attestations: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    outputs:
+      eligible: ${{ steps.release.outputs.eligible }}
+      tag: ${{ steps.release.outputs.tag }}
+      release_commit: ${{ steps.release.outputs.release_commit }}
+      source_run_id: ${{ steps.release.outputs.source_run_id }}
+      source_run_attempt: ${{ steps.release.outputs.source_run_attempt }}
+      correlation_id: ${{ steps.release.outputs.correlation_id }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/resolve_reconciliation.py --product '${{ inputs.product }}' --channel '${{ inputs.channel }}'
+      - if: steps.release.outputs.eligible != 'true'
+        run: echo 'No bundle-backed eligible release exists yet; reconciliation is healthy and has nothing to publish.' >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    needs: resolve
+    if: needs.resolve.outputs.eligible == 'true'
+    uses: ./.github/workflows/publish-homebrew.yml
+    with:
+      product: ${{ inputs.product }}
+      tag: ${{ needs.resolve.outputs.tag }}
+      release_commit: ${{ needs.resolve.outputs.release_commit }}
+      source_run_id: ${{ needs.resolve.outputs.source_run_id }}
+      source_run_attempt: ${{ needs.resolve.outputs.source_run_attempt }}
+      correlation_id: ${{ needs.resolve.outputs.correlation_id }}
+    secrets: inherit

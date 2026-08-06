@@ -1,0 +1,26 @@
+name: Test Homebrew publication contract
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - homebrew-products.json
+      - scripts/homebrew_publication.py
+      - scripts/publish-homebrew.sh
+      - scripts/resolve_reconciliation.py
+      - tests/test_homebrew_publication.py
+      - .github/workflows/publish-homebrew.yml
+      - .github/workflows/reconcile-homebrew.yml
+      - .github/workflows/reconcile-product.yml
+      - .github/workflows/test-homebrew-publication.yml
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - run: python3 -m unittest discover -s tests -v
+      - uses: raven-actions/actionlint@3a6a65c9825eb3d9a4cbe5f6d78116c6d05c25a6 # v2
