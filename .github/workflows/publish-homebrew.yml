@@ -27,7 +27,7 @@ permissions:
   attestations: read
 
 concurrency:
-  group: homebrew-tap-publication
+  group: homebrew-tap-publication-${{ inputs.product || github.event.client_payload.product }}
   cancel-in-progress: false
 
 jobs:

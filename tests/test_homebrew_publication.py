@@ -152,9 +152,9 @@ class PublicationContractTests(unittest.TestCase):
         self.assertEqual([], publication.apply_casks(root, ["butter-paper.rb", "butter-paper@beta.rb"], current))
         self.assertEqual("untouched", (current / "unrelated.rb").read_text())
 
-    def test_dispatch_workflow_is_globally_serialised_and_secret_isolated(self):
+    def test_dispatch_workflow_serialises_each_product_and_is_secret_isolated(self):
         workflow = (ROOT / ".github/workflows/publish-homebrew.yml").read_text()
-        self.assertIn("group: homebrew-tap-publication", workflow)
+        self.assertIn("group: homebrew-tap-publication-${{ inputs.product || github.event.client_payload.product }}", workflow)
         self.assertIn("environment: tap-publication", workflow)
         self.assertIn("HOMEBREW_PUBLISHER_PRIVATE_KEY", workflow)
         self.assertIn("permissions:\n  contents: read", workflow)
@@ -164,6 +164,7 @@ class PublicationContractTests(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/reconcile-homebrew.yml").read_text()
         self.assertIn('cron: "19 * * * *"', workflow)
         self.assertIn("fail-fast: false", workflow)
+        self.assertIn("max-parallel: 1", workflow)
         for product in self.registry["products"]:
             self.assertIn(product, workflow)
 
