@@ -17,6 +17,8 @@ brew install --cask apotenza92/tap/<cask-name>
 ## Available examples
 
 ```bash
+brew install --cask apotenza92/tap/fraia
+brew install --cask apotenza92/tap/fraia@beta
 brew install --cask apotenza92/tap/facebook-messenger-desktop
 brew install --cask apotenza92/tap/facebook-messenger-desktop@beta
 ```
@@ -45,4 +47,7 @@ brew uninstall --cask <cask-name>
   automation. New macOS archives must match GitHub's published SHA-256 digests
   and pass architecture, signature, hardened runtime, notarization, stapling,
   and Gatekeeper checks before the casks are updated.
+- Fraia stable and beta casks use the same fail-closed verification and update
+  automatically from approved Fraia releases. A final stable release may
+  advance both casks when it includes the separately signed Fraia Beta app.
 - Use `@beta` tokens when a beta channel cask is available.
