@@ -26,9 +26,6 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
       - name: Validate dispatch shape
         if: github.event_name == 'repository_dispatch'
         env:
@@ -36,6 +33,20 @@ jobs:
         run: |
           jq -e 'keys | sort == ["channel","correlation_id","product"]' <<<"$PAYLOAD"
           jq -er '.correlation_id | select(test("^[A-Za-z0-9._:/@+-]{1,240}$"))' <<<"$PAYLOAD"
+      - name: Fetch the exact public tap verifier inputs without an action dependency
+        env:
+          PRODUCT: ${{ github.event.client_payload.product || inputs.product }}
+          CHANNEL: ${{ github.event.client_payload.channel || inputs.channel }}
+        run: |
+          set -euo pipefail
+          raw="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}"
+          mkdir -p scripts Casks
+          curl --fail --location --retry 10 --retry-all-errors "$raw/homebrew-products.json" -o homebrew-products.json
+          curl --fail --location --retry 10 --retry-all-errors "$raw/scripts/verify-current-homebrew.py" -o scripts/verify-current-homebrew.py
+          cask="$(jq -er --arg product "$PRODUCT" --arg channel "$CHANNEL" '.products[$product][$channel + "_cask"]' homebrew-products.json)"
+          [[ "$cask" =~ ^[a-z0-9@-]+\.rb$ ]]
+          curl --fail --location --retry 10 --retry-all-errors "$raw/Casks/$cask" -o "Casks/$cask"
+          find homebrew-products.json scripts Casks -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > input-SHA256SUMS
       - name: Verify immutable public bytes and exact no-op
         env:
           GH_TOKEN: ${{ github.token }}
@@ -43,4 +54,4 @@ jobs:
           CHANNEL: ${{ github.event.client_payload.channel || inputs.channel }}
         run: python3 scripts/verify-current-homebrew.py --product "$PRODUCT" --channel "$CHANNEL"
       - name: Prove repository remained unchanged
-        run: git diff --exit-code && test -z "$(git status --porcelain)"
+        run: sha256sum --check --strict input-SHA256SUMS
