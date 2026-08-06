@@ -21,6 +21,7 @@ class PublicationContractTests(unittest.TestCase):
         self.assertEqual(6, len(products))
         casks = [entry[key] for entry in products.values() for key in ("stable_cask", "beta_cask")]
         self.assertEqual(12, len(set(casks)))
+        self.assertEqual(["arm64"], products["caul"]["architectures"])
 
     def test_registry_rejects_duplicate_cask_ownership(self):
         data = json.loads((ROOT / "homebrew-products.json").read_text())

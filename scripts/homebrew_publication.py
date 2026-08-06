@@ -54,7 +54,8 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict:
             if not re.fullmatch(r"[a-z0-9@-]+\.rb", name) or name in casks:
                 raise PublicationError(f"Cask ownership is invalid: {name}")
             casks.add(name)
-        if entry["architectures"] != ["arm64", "x64"]:
+        if (not entry["architectures"] or len(set(entry["architectures"])) != len(entry["architectures"])
+                or any(architecture not in {"arm64", "x64"} for architecture in entry["architectures"])):
             raise PublicationError(f"Architecture contract is invalid: {product}")
         for channel in ("stable", "beta"):
             re.compile(entry["tag_patterns"][channel])

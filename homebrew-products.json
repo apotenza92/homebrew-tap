@@ -23,7 +23,7 @@
       "applications": {"stable": "Caul.app", "beta": "Caul Beta.app"},
       "bundle_identifiers": {"stable": "dev.caul.app", "beta": "dev.caul.app.beta"},
       "artifact_patterns": {"stable": "^Caul-macos-(arm64|x64)\\.zip$", "beta": "^Caul-Beta-macos-(arm64|x64)\\.zip$"},
-      "architectures": ["arm64", "x64"],
+      "architectures": ["arm64"],
       "minimum_macos": "14.0",
       "stable_advances_beta": true
     },
