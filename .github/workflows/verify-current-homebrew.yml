@@ -16,7 +16,7 @@ on:
     types: [verify-current-homebrew-v1]
 
 concurrency:
-  group: tap-homebrew-publication
+  group: current-homebrew-proof-${{ github.event.client_payload.product || inputs.product }}-${{ github.event.client_payload.channel || inputs.channel }}
   cancel-in-progress: false
 
 permissions:
