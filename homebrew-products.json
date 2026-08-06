@@ -64,7 +64,7 @@
       "artifact_patterns": {"stable": "^Messenger-macos-(arm64|x64)\\.zip$", "beta": "^Messenger-Beta-macos-(arm64|x64)\\.zip$"},
       "architectures": ["arm64", "x64"],
       "minimum_macos": "12.0",
-      "stable_advances_beta": false
+      "stable_advances_beta": true
     },
     "fraia": {
       "repository": "apotenza92/fraia",
