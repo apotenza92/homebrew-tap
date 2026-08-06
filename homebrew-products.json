@@ -37,7 +37,7 @@
       "bundle_identifiers": {"stable": "pzc.Dockmint", "beta": "pzc.Dockmint.beta"},
       "artifact_patterns": {"stable": "^Dockmint-v[0-9].*-macos-(arm64|x64)\\.zip$", "beta": "^Dockmint-Beta-v[0-9].*-macos-(arm64|x64)\\.zip$"},
       "architectures": ["arm64", "x64"],
-      "minimum_macos": "13.0",
+      "minimum_macos": "14.0",
       "stable_advances_beta": true
     },
     "macsimize": {
@@ -50,7 +50,7 @@
       "bundle_identifiers": {"stable": "pzc.Macsimize", "beta": "pzc.Macsimize.beta"},
       "artifact_patterns": {"stable": "^Macsimize-v[0-9].*-macos-(arm64|x64)\\.zip$", "beta": "^Macsimize-Beta-v[0-9].*-macos-(arm64|x64)\\.zip$"},
       "architectures": ["arm64", "x64"],
-      "minimum_macos": "13.0",
+      "minimum_macos": "14.0",
       "stable_advances_beta": true
     },
     "facebook-messenger-desktop": {
@@ -64,7 +64,7 @@
       "artifact_patterns": {"stable": "^Messenger-macos-(arm64|x64)\\.zip$", "beta": "^Messenger-Beta-macos-(arm64|x64)\\.zip$"},
       "architectures": ["arm64", "x64"],
       "minimum_macos": "12.0",
-      "stable_advances_beta": false
+      "stable_advances_beta": true
     },
     "fraia": {
       "repository": "apotenza92/fraia",
