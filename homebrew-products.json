@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "products": {
+    "butter-paper": {
+      "repository": "apotenza92/butter-paper",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "butter-paper.rb",
+      "beta_cask": "butter-paper@beta.rb",
+      "tag_patterns": {"stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$", "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"},
+      "applications": {"stable": "Butter Paper.app", "beta": "Butter Paper Beta.app"},
+      "bundle_identifiers": {"stable": "com.butterpaper.desktop", "beta": "com.butterpaper.desktop.beta"},
+      "artifact_patterns": {"stable": "^Butter-Paper-macOS-(arm64|x64)\\.zip$", "beta": "^Butter-Paper-Beta-macOS-(arm64|x64)\\.zip$"},
+      "architectures": ["arm64", "x64"],
+      "minimum_macos": "12.0",
+      "stable_advances_beta": true
+    },
+    "caul": {
+      "repository": "apotenza92/caul",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "caul.rb",
+      "beta_cask": "caul@beta.rb",
+      "tag_patterns": {"stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$", "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"},
+      "applications": {"stable": "Caul.app", "beta": "Caul Beta.app"},
+      "bundle_identifiers": {"stable": "dev.caul.app", "beta": "dev.caul.app.beta"},
+      "artifact_patterns": {"stable": "^Caul-macos-(arm64|x64)\\.zip$", "beta": "^Caul-Beta-macos-(arm64|x64)\\.zip$"},
+      "architectures": ["arm64"],
+      "minimum_macos": "14.0",
+      "stable_advances_beta": true
+    },
+    "dockmint": {
+      "repository": "apotenza92/dockmint",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "dockmint.rb",
+      "beta_cask": "dockmint@beta.rb",
+      "tag_patterns": {"stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$", "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"},
+      "applications": {"stable": "Dockmint.app", "beta": "Dockmint Beta.app"},
+      "bundle_identifiers": {"stable": "pzc.Dockmint", "beta": "pzc.Dockmint.beta"},
+      "artifact_patterns": {"stable": "^Dockmint-v[0-9].*-macos-(arm64|x64)\\.zip$", "beta": "^Dockmint-Beta-v[0-9].*-macos-(arm64|x64)\\.zip$"},
+      "architectures": ["arm64", "x64"],
+      "minimum_macos": "13.0",
+      "stable_advances_beta": true
+    },
+    "macsimize": {
+      "repository": "apotenza92/macsimize",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "macsimize.rb",
+      "beta_cask": "macsimize@beta.rb",
+      "tag_patterns": {"stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$", "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"},
+      "applications": {"stable": "Macsimize.app", "beta": "Macsimize Beta.app"},
+      "bundle_identifiers": {"stable": "pzc.Macsimize", "beta": "pzc.Macsimize.beta"},
+      "artifact_patterns": {"stable": "^Macsimize-v[0-9].*-macos-(arm64|x64)\\.zip$", "beta": "^Macsimize-Beta-v[0-9].*-macos-(arm64|x64)\\.zip$"},
+      "architectures": ["arm64", "x64"],
+      "minimum_macos": "13.0",
+      "stable_advances_beta": true
+    },
+    "facebook-messenger-desktop": {
+      "repository": "apotenza92/facebook-messenger-desktop",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "facebook-messenger-desktop.rb",
+      "beta_cask": "facebook-messenger-desktop@beta.rb",
+      "tag_patterns": {"stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$", "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"},
+      "applications": {"stable": "Messenger.app", "beta": "Messenger Beta.app"},
+      "bundle_identifiers": {"stable": "com.facebook.messenger.desktop", "beta": "com.facebook.messenger.desktop.beta"},
+      "artifact_patterns": {"stable": "^Messenger-macos-(arm64|x64)\\.zip$", "beta": "^Messenger-Beta-macos-(arm64|x64)\\.zip$"},
+      "architectures": ["arm64", "x64"],
+      "minimum_macos": "12.0",
+      "stable_advances_beta": false
+    },
+    "fraia": {
+      "repository": "apotenza92/fraia",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "fraia.rb",
+      "beta_cask": "fraia@beta.rb",
+      "tag_patterns": {"stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$", "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"},
+      "applications": {"stable": "Fraia.app", "beta": "Fraia Beta.app"},
+      "bundle_identifiers": {"stable": "app.fraia.desktop", "beta": "app.fraia.desktop.beta"},
+      "artifact_patterns": {"stable": "^Fraia-macOS-(arm64|x64)\\.zip$", "beta": "^Fraia-Beta-macOS-(arm64|x64)\\.zip$"},
+      "architectures": ["arm64", "x64"],
+      "minimum_macos": "15.0",
+      "stable_advances_beta": true
+    }
+  }
+}

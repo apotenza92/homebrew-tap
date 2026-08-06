@@ -1,0 +1,101 @@
+name: Publish trusted Homebrew bundle
+run-name: ${{ inputs.correlation_id || github.event.client_payload.correlation_id || format('manual:{0}:{1}', inputs.product, inputs.tag) }}
+
+on:
+  workflow_call:
+    inputs:
+      product: {required: true, type: string}
+      tag: {required: true, type: string}
+      release_commit: {required: true, type: string}
+      source_run_id: {required: true, type: string}
+      source_run_attempt: {required: true, type: string}
+      correlation_id: {required: true, type: string}
+  repository_dispatch:
+    types: [publish-homebrew-v1]
+  workflow_dispatch:
+    inputs:
+      product: {description: Product registry key, required: true, type: choice, options: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia]}
+      tag: {description: Exact public release tag, required: true, type: string}
+      release_commit: {description: Exact release commit, required: true, type: string}
+      source_run_id: {description: Source release workflow run ID, required: true, type: string}
+      source_run_attempt: {description: Source release workflow run attempt, required: true, type: string}
+      correlation_id: {description: Unique source correlation ID, required: true, type: string}
+
+permissions:
+  contents: read
+  actions: read
+  attestations: read
+
+concurrency:
+  group: homebrew-tap-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Validate, publish, and verify public casks
+    runs-on: macos-15
+    timeout-minutes: 45
+    environment: tap-publication
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      GH_TOKEN: ${{ github.token }}
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+      PRODUCT: ${{ inputs.product || github.event.client_payload.product }}
+      RELEASE_TAG: ${{ inputs.tag || github.event.client_payload.tag }}
+      RELEASE_COMMIT: ${{ inputs.release_commit || github.event.client_payload.release_commit }}
+      SOURCE_RUN_ID: ${{ inputs.source_run_id || github.event.client_payload.source_run_id }}
+      SOURCE_RUN_ATTEMPT: ${{ inputs.source_run_attempt || github.event.client_payload.source_run_attempt }}
+      CORRELATION_ID: ${{ inputs.correlation_id || github.event.client_payload.correlation_id }}
+    steps:
+      - name: Mint tap-only publisher token
+        id: publisher
+        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2
+        with:
+          app-id: ${{ vars.HOMEBREW_PUBLISHER_APP_ID }}
+          private-key: ${{ secrets.HOMEBREW_PUBLISHER_PRIVATE_KEY }}
+          owner: apotenza92
+          repositories: homebrew-tap
+
+      - name: Check out tap main with publisher identity
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: main
+          token: ${{ steps.publisher.outputs.token }}
+          persist-credentials: true
+
+      - name: Resolve product through reviewed registry
+        id: registry
+        env:
+          REGISTRY_PRODUCT: ${{ env.PRODUCT }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          product = os.environ['REGISTRY_PRODUCT']
+          registry = json.load(open('homebrew-products.json'))['products']
+          if product not in registry:
+              raise SystemExit('Unknown product')
+          entry = registry[product]
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f"stable_cask={entry['stable_cask']}\n")
+              output.write(f"beta_cask={entry['beta_cask']}\n")
+          PY
+
+      - name: Validate, publish, and verify exact public bytes
+        id: publication
+        env:
+          STABLE_CASK: ${{ steps.registry.outputs.stable_cask }}
+          BETA_CASK: ${{ steps.registry.outputs.beta_cask }}
+        run: ./scripts/publish-homebrew.sh
+
+      - name: Publication summary
+        if: always()
+        run: |
+          {
+            echo '## Homebrew publication'
+            echo "- Product: \`$PRODUCT\`"
+            echo "- Release: \`$RELEASE_TAG\` at \`$RELEASE_COMMIT\`"
+            echo "- Correlation: \`$CORRELATION_ID\`"
+            echo "- Changed: \`${{ steps.publication.outputs.changed || 'false' }}\`"
+            echo "- Casks: \`${{ steps.publication.outputs.changed_casks || 'already current' }}\`"
+            echo "- Tap commit: \`${{ steps.publication.outputs.tap_commit || github.sha }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
