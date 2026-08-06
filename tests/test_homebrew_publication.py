@@ -76,7 +76,7 @@ class PublicationContractTests(unittest.TestCase):
         for channel, filename in (("stable", entry["stable_cask"]), ("beta", entry["beta_cask"])):
             prefix = "Butter-Paper" if channel == "stable" else "Butter-Paper-Beta"
             (root / "Casks" / filename).write_text(
-                f'cask "x" do\n  version "1.2.3"\n  url "https://github.com/{entry["repository"]}/releases/download/{tag}/{prefix}-macOS-arm64.zip"\nend\n'
+                f'cask "x" do\n  version "1.2.3"\n  url "https://github.com/{entry["repository"]}/releases/download/v#{{version}}/{prefix}-macOS-arm64.zip"\nend\n'
             )
         manifest = {
             "schema_version": 1,

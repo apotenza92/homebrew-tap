@@ -159,8 +159,9 @@ def validate_manifest(root: Path, product: str, tag: str, commit: str, registry:
         version_match = re.search(r'^\s*version\s+"([^"]+)"', text, re.MULTILINE)
         if not version_match or version_match.group(1) != version:
             raise PublicationError(f"Cask version does not match the release: {cask}")
-        urls = re.findall(r'https://github\.com/[^"#{}]+', text)
-        if not urls or any(not url.startswith(f"https://github.com/{entry['repository']}/releases/download/{tag}/") for url in urls):
+        urls = re.findall(r'^\s*url\s+"([^"]+)"', text, re.MULTILINE)
+        resolved_urls = [url.replace("v#{version}", tag) for url in urls]
+        if not resolved_urls or any(not url.startswith(f"https://github.com/{entry['repository']}/releases/download/{tag}/") for url in resolved_urls):
             raise PublicationError(f"Cask URL escapes the approved release: {cask}")
     return manifest, expected_casks
 

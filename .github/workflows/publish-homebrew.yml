@@ -1,4 +1,5 @@
 name: Publish trusted Homebrew bundle
+run-name: ${{ inputs.correlation_id || github.event.client_payload.correlation_id || format('manual:{0}:{1}', inputs.product, inputs.tag) }}
 
 on:
   workflow_call:
