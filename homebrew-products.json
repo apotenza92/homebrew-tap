@@ -37,7 +37,7 @@
       "bundle_identifiers": {"stable": "pzc.Dockmint", "beta": "pzc.Dockmint.beta"},
       "artifact_patterns": {"stable": "^Dockmint-v[0-9].*-macos-(arm64|x64)\\.zip$", "beta": "^Dockmint-Beta-v[0-9].*-macos-(arm64|x64)\\.zip$"},
       "architectures": ["arm64", "x64"],
-      "minimum_macos": "13.0",
+      "minimum_macos": "14.0",
       "stable_advances_beta": true
     },
     "macsimize": {
