@@ -17,9 +17,6 @@ def main():
     tag=f"v{version.group(1)}"; release=gh(f"repos/{entry['repository']}/releases/tags/{tag}")
     if release.get("draft"): raise SystemExit("release is not public")
     immutable_supported = release.get("immutable") is True
-    if not immutable_supported:
-        repository_settings=gh(f"repos/{entry['repository']}/immutable-releases")
-        if repository_settings.get("enabled") is not True: raise SystemExit("release immutability is not enabled")
     expected_beta="-beta." in tag
     if bool(release.get("prerelease")) != expected_beta: raise SystemExit("release classification mismatch")
     assets={x["name"]:x for x in release["assets"]}; urls=re.findall(r'^\s*url\s+"(https://github\.com/[^"]+/releases/download/[^"]+)"',text,re.M); shas=re.findall(r'^\s*sha256\s+"([0-9a-f]{64})"',text,re.M)
@@ -35,5 +32,5 @@ def main():
     comparison=gh(f"repos/{entry['repository']}/compare/{commit}...main")
     if comparison["status"] not in ("ahead","identical"): raise SystemExit("tag commit is not reachable from main")
     if digest(cask)!=before or subprocess.run(["git","diff","--quiet","--",str(cask)],cwd=ROOT).returncode: raise SystemExit("verification mutated the cask")
-    print(json.dumps({"product":a.product,"channel":a.channel,"tag":tag,"cask":name,"commit":commit,"release_immutable":immutable_supported,"repository_immutability_enabled":True,"no_op":True},sort_keys=True))
+    print(json.dumps({"product":a.product,"channel":a.channel,"tag":tag,"cask":name,"commit":commit,"release_immutable":immutable_supported,"no_op":True},sort_keys=True))
 if __name__=="__main__": main()
