@@ -157,6 +157,7 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("group: homebrew-tap-publication-${{ inputs.product || github.event.client_payload.product }}", workflow)
         self.assertIn("environment: tap-publication", workflow)
         self.assertIn("HOMEBREW_PUBLISHER_PRIVATE_KEY", workflow)
+        self.assertIn("permission-contents: write", workflow)
         self.assertIn("permissions:\n  contents: read", workflow)
         self.assertNotIn("pull_request:", workflow)
 
@@ -167,6 +168,15 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("max-parallel: 1", workflow)
         for product in self.registry["products"]:
             self.assertIn(product, workflow)
+
+    def test_legacy_direct_cask_writers_are_retired(self):
+        for path in (
+            ROOT / ".github/workflows/update-fraia-casks.yml",
+            ROOT / ".github/workflows/update-messenger-casks.yml",
+            ROOT / "scripts/update-fraia-casks.sh",
+            ROOT / "scripts/update-messenger-casks.sh",
+        ):
+            self.assertFalse(path.exists(), path)
 
 
 if __name__ == "__main__":

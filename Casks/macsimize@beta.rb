@@ -2,13 +2,14 @@ cask "macsimize@beta" do
   version "0.3.8"
 
   on_arm do
-    url "https://github.com/apotenza92/macsimize/releases/download/v0.3.8/Macsimize-Beta-v0.3.8-macos-arm64.zip"
     sha256 "d38f677f931de8ddccefed78997af1e8767f9179dceab30991a2048ab3f4d454"
-  end
 
+    url "https://github.com/apotenza92/macsimize/releases/download/v#{version}/Macsimize-Beta-v#{version}-macos-arm64.zip"
+  end
   on_intel do
-    url "https://github.com/apotenza92/macsimize/releases/download/v0.3.8/Macsimize-Beta-v0.3.8-macos-x64.zip"
     sha256 "1a1fd284bf38abdd8aff352682521beae53bf54b07e1e0a884a733adac14bec8"
+
+    url "https://github.com/apotenza92/macsimize/releases/download/v#{version}/Macsimize-Beta-v#{version}-macos-x64.zip"
   end
 
   name "Macsimize Beta"
@@ -23,6 +24,8 @@ cask "macsimize@beta" do
         .map { |release| release["tag_name"] }
     end
   end
+
+  depends_on macos: :sonoma
 
   app "Macsimize Beta.app"
 
