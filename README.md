@@ -43,11 +43,11 @@ brew uninstall --cask <cask-name>
 
 ## Notes
 
-- Messenger stable and beta casks are checked every six hours by trusted tap
-  automation. New macOS archives must match GitHub's published SHA-256 digests
-  and pass architecture, signature, hardened runtime, notarization, stapling,
-  and Gatekeeper checks before the casks are updated.
-- Fraia stable and beta casks use the same fail-closed verification and update
-  automatically from approved Fraia releases. A final stable release may
-  advance both casks when it includes the separately signed Fraia Beta app.
+- All casks are published by trusted tap automation only from source releases
+  that contain a checksum-sealed, attested Homebrew bundle. New macOS archives
+  must match GitHub's published SHA-256 digests and pass architecture,
+  signature, hardened runtime, notarization, stapling, and Gatekeeper checks
+  before the casks are updated.
+- Stable releases may advance both stable and beta casks when the source
+  product's reviewed release contract permits it.
 - Use `@beta` tokens when a beta channel cask is available.
