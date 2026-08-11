@@ -1,15 +1,19 @@
 import hashlib
 import io
 import json
+import os
 import sys
 import tarfile
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import homebrew_publication as publication
+import resolve_reconciliation as reconciliation
 
 
 class PublicationContractTests(unittest.TestCase):
@@ -173,6 +177,38 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("max-parallel: 1", workflow)
         for product in self.registry["products"]:
             self.assertIn(product, workflow)
+
+    def test_reconciliation_treats_failed_source_release_as_healthy_noop(self):
+        commit = "a" * 40
+
+        def fake_gh(endpoint):
+            if endpoint.endswith("/releases?per_page=100"):
+                return [{
+                    "draft": False,
+                    "prerelease": False,
+                    "tag_name": "v1.4.2",
+                    "assets": [{"name": publication.BUNDLE_NAME}],
+                }]
+            if "/git/ref/tags/" in endpoint:
+                return {"object": {"type": "commit", "sha": commit}}
+            if "/actions/workflows/" in endpoint:
+                return {"workflow_runs": []}
+            self.fail(f"Unexpected endpoint: {endpoint}")
+
+        output = io.StringIO()
+        with patch.object(reconciliation, "gh", side_effect=fake_gh), \
+             patch.object(sys, "argv", ["resolve_reconciliation.py", "--product",
+                                        "facebook-messenger-desktop", "--channel", "stable"]), \
+             patch.dict(os.environ, {}, clear=True), redirect_stdout(output):
+            reconciliation.main()
+
+        self.assertEqual({
+            "eligible": False,
+            "product": "facebook-messenger-desktop",
+            "channel": "stable",
+            "tag": "v1.4.2",
+            "reason": "no-successful-source-run",
+        }, json.loads(output.getvalue()))
 
     def test_legacy_direct_cask_writers_are_retired(self):
         for path in (
