@@ -18,6 +18,14 @@ def gh(endpoint: str) -> object:
     return json.loads(result.stdout)
 
 
+def emit(result: dict[str, object]) -> None:
+    print(json.dumps(result, sort_keys=True))
+    if os.environ.get("GITHUB_OUTPUT"):
+        with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
+            for key, value in result.items():
+                output.write(f"{key}={str(value).lower() if isinstance(value, bool) else value}\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--product", required=True)
@@ -31,7 +39,8 @@ def main() -> None:
                   and bool(release["prerelease"]) == (args.channel == "beta")
                   and any(asset["name"] == BUNDLE_NAME for asset in release["assets"])]
     if not candidates:
-        print(json.dumps({"eligible": False, "product": args.product, "channel": args.channel}))
+        emit({"eligible": False, "product": args.product, "channel": args.channel,
+              "reason": "no-bundle-backed-release"})
         return
     release = max(candidates, key=lambda item: parse_version(item["tag_name"]))
     tag = release["tag_name"]
@@ -43,17 +52,15 @@ def main() -> None:
     runs = gh(f"repos/{entry['repository']}/actions/workflows/{workflow}/runs?event=push&head_sha={commit}&per_page=100")["workflow_runs"]
     runs = [run for run in runs if run["head_branch"] == tag and run["conclusion"] == "success"]
     if not runs:
-        raise PublicationError(f"No successful source release run found for {entry['repository']} {tag}")
+        emit({"eligible": False, "product": args.product, "channel": args.channel,
+              "tag": tag, "reason": "no-successful-source-run"})
+        return
     run = max(runs, key=lambda item: (item["run_number"], item["run_attempt"]))
     result = {"eligible": True, "product": args.product, "channel": args.channel, "tag": tag,
               "release_commit": commit, "source_run_id": str(run["id"]),
               "source_run_attempt": str(run["run_attempt"]),
               "correlation_id": f"reconcile:{args.product}:{args.channel}:{run['id']}:{run['run_attempt']}"}
-    print(json.dumps(result, sort_keys=True))
-    if os.environ.get("GITHUB_OUTPUT"):
-        with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
-            for key, value in result.items():
-                output.write(f"{key}={str(value).lower() if isinstance(value, bool) else value}\n")
+    emit(result)
 
 
 if __name__ == "__main__":
