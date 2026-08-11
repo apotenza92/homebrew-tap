@@ -116,6 +116,28 @@ def verify_checksums(root: Path) -> None:
         raise PublicationError("SHA256SUMS file set does not match the bundle")
 
 
+def cask_artifact_urls(text: str) -> list[str]:
+    urls: list[str] = []
+    livecheck_depth = 0
+    for line in text.splitlines():
+        stripped = line.strip()
+        if livecheck_depth:
+            if re.search(r"\bdo(?:\s+\|[^|]*\|)?\s*$", stripped):
+                livecheck_depth += 1
+            if stripped == "end":
+                livecheck_depth -= 1
+            continue
+        if stripped == "livecheck do":
+            livecheck_depth = 1
+            continue
+        match = re.fullmatch(r'url\s+"([^"]+)"', stripped)
+        if match:
+            urls.append(match.group(1))
+    if livecheck_depth:
+        raise PublicationError("Cask livecheck block is not closed")
+    return urls
+
+
 def validate_manifest(root: Path, product: str, tag: str, commit: str, registry: dict) -> tuple[dict, list[str]]:
     allowed_top = {"manifest.json", "SHA256SUMS", "Casks"}
     if {p.name for p in root.iterdir()} != allowed_top or not (root / "Casks").is_dir():
@@ -160,7 +182,7 @@ def validate_manifest(root: Path, product: str, tag: str, commit: str, registry:
         version_match = re.search(r'^\s*version\s+"([^"]+)"', text, re.MULTILINE)
         if not version_match or version_match.group(1) != version:
             raise PublicationError(f"Cask version does not match the release: {cask}")
-        urls = re.findall(r'^\s*url\s+"([^"]+)"', text, re.MULTILINE)
+        urls = cask_artifact_urls(text)
         resolved_urls = [url.replace("v#{version}", tag) for url in urls]
         if not resolved_urls or any(not url.startswith(f"https://github.com/{entry['repository']}/releases/download/{tag}/") for url in resolved_urls):
             raise PublicationError(f"Cask URL escapes the approved release: {cask}")
