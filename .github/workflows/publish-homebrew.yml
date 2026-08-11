@@ -56,7 +56,6 @@ jobs:
           owner: apotenza92
           repositories: homebrew-tap
           permission-contents: write
-          permission-actions: read
 
       - name: Check out tap main with publisher identity
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
