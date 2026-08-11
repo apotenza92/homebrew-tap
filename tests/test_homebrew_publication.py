@@ -76,8 +76,13 @@ class PublicationContractTests(unittest.TestCase):
         tag = "v1.2.3"
         for channel, filename in (("stable", entry["stable_cask"]), ("beta", entry["beta_cask"])):
             prefix = "Butter-Paper" if channel == "stable" else "Butter-Paper-Beta"
+            livecheck = (
+                f'  livecheck do\n    url "https://github.com/{entry["repository"]}/releases"\n'
+                '    strategy :page_match\n  end\n'
+                if channel == "beta" else ""
+            )
             (root / "Casks" / filename).write_text(
-                f'cask "x" do\n  version "1.2.3"\n  url "https://github.com/{entry["repository"]}/releases/download/v#{{version}}/{prefix}-macOS-arm64.zip"\nend\n'
+                f'cask "x" do\n  version "1.2.3"\n  url "https://github.com/{entry["repository"]}/releases/download/v#{{version}}/{prefix}-macOS-arm64.zip"\n{livecheck}end\n'
             )
         manifest = {
             "schema_version": 1,
