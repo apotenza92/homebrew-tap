@@ -1,13 +1,13 @@
 cask "fraia@beta" do
-  version "0.0.10"
+  version "0.0.11"
 
   on_arm do
-    sha256 "9c323155b2bfeeecc704b43aaa0390c52068d6f533a0257ace563415d3c42b32"
+    sha256 "8c1a84463ded6c8fe07c5e5b29ccc4d1c14b874eb0d83a12191dc1f190ebaca0"
 
     url "https://github.com/apotenza92/fraia/releases/download/v#{version}/Fraia-Beta-macOS-arm64.zip"
   end
   on_intel do
-    sha256 "be0413554c0edb9112ec37b91ccbb1d2a6900960a2419e7849750a30e262dfeb"
+    sha256 "4ab7d3be5d1449e02289d1681396cd3a0d325ff5202b4d6b9201bd341c7bb343"
 
     url "https://github.com/apotenza92/fraia/releases/download/v#{version}/Fraia-Beta-macOS-x64.zip"
   end
@@ -17,7 +17,7 @@ cask "fraia@beta" do
   homepage "https://github.com/apotenza92/fraia"
 
   livecheck do
-    skip "Updated by trusted Fraia tap automation"
+    skip "Updated by trusted Fraia release automation"
   end
 
   auto_updates true
