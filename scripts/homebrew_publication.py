@@ -215,6 +215,28 @@ def gh_json(endpoint: str) -> dict:
     return json.loads(run("gh", "api", endpoint))
 
 
+def source_run_is_publishable(repository: str, workflow_run: dict) -> bool:
+    conclusion = workflow_run.get("conclusion")
+    if conclusion in {None, "success"}:
+        return True
+    if workflow_run.get("status") != "completed" or conclusion != "failure":
+        return False
+
+    jobs = gh_json(
+        f"repos/{repository}/actions/runs/{workflow_run['id']}/jobs?filter=latest&per_page=100"
+    ).get("jobs", [])
+    public_verification = next(
+        (job for job in jobs if job.get("name") == "Verify public release and feeds"), None
+    )
+    failed_jobs = [job for job in jobs if job.get("conclusion") == "failure"]
+    return (
+        public_verification is not None
+        and public_verification.get("conclusion") == "success"
+        and bool(failed_jobs)
+        and all(job.get("name", "").startswith("Homebrew ") for job in failed_jobs)
+    )
+
+
 def verify_public_state(entry: dict, manifest: dict, run_id: str, run_attempt: str) -> None:
     repository, tag, commit = entry["repository"], manifest["release_tag"], manifest["release_commit"]
     release = gh_json(f"repos/{repository}/releases/tags/{tag}")
@@ -235,7 +257,7 @@ def verify_public_state(entry: dict, manifest: dict, run_id: str, run_attempt: s
     if (str(workflow_run["run_attempt"]) != str(run_attempt) or workflow_run["head_sha"] != commit
             or workflow_run["event"] != "push" or workflow_run["path"] != entry["workflow"]
             or workflow_run["head_branch"] != tag or workflow_run["status"] not in {"in_progress", "completed"}
-            or workflow_run.get("conclusion") not in {None, "success"}):
+            or not source_run_is_publishable(repository, workflow_run)):
         raise PublicationError("Source workflow provenance mismatch")
     assets = {asset["name"]: asset for asset in release["assets"]}
     for artifact in manifest["artifacts"]:

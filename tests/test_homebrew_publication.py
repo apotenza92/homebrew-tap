@@ -161,6 +161,35 @@ class PublicationContractTests(unittest.TestCase):
         self.assertEqual([], publication.apply_casks(root, ["butter-paper.rb", "butter-paper@beta.rb"], current))
         self.assertEqual("untouched", (current / "unrelated.rb").read_text())
 
+    def test_failed_source_run_is_recoverable_only_after_public_verification(self):
+        repository = "apotenza92/fraia"
+        run = {"id": 42, "status": "completed", "conclusion": "failure"}
+
+        def check(jobs):
+            with patch.object(
+                publication,
+                "gh_json",
+                return_value={"jobs": jobs},
+            ):
+                return publication.source_run_is_publishable(repository, run)
+
+        self.assertTrue(check([
+            {"name": "Verify public release and feeds", "conclusion": "success"},
+            {"name": "Homebrew stable (arm64)", "conclusion": "failure"},
+        ]))
+        self.assertFalse(check([
+            {"name": "Verify public release and feeds", "conclusion": "failure"},
+            {"name": "Homebrew stable (arm64)", "conclusion": "failure"},
+        ]))
+        self.assertFalse(check([
+            {"name": "Verify public release and feeds", "conclusion": "success"},
+            {"name": "Publish stable release and eligible feeds", "conclusion": "failure"},
+        ]))
+        self.assertFalse(check([
+            {"name": "Verify public release and feeds", "conclusion": "success"},
+            {"name": "Homebrew stable (arm64)", "conclusion": "cancelled"},
+        ]))
+
     def test_dispatch_workflow_serialises_each_product_and_is_secret_isolated(self):
         workflow = (ROOT / ".github/workflows/publish-homebrew.yml").read_text()
         self.assertIn("group: homebrew-tap-publication-${{ inputs.product || github.event.client_payload.product }}", workflow)
