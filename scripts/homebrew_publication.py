@@ -12,6 +12,8 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path, PurePosixPath
 
@@ -215,6 +217,21 @@ def gh_json(endpoint: str) -> dict:
     return json.loads(run("gh", "api", endpoint))
 
 
+def download_public_artifact(url: str, destination: Path, attempts: int = 4) -> None:
+    last_error: urllib.error.URLError | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            urllib.request.urlretrieve(url, destination)
+            return
+        except urllib.error.URLError as error:
+            last_error = error
+            if attempt < attempts:
+                time.sleep(attempt * 5)
+    raise PublicationError(
+        f"Public artifact download failed after {attempts} attempts: {url}"
+    ) from last_error
+
+
 def source_run_is_publishable(repository: str, workflow_run: dict) -> bool:
     conclusion = workflow_run.get("conclusion")
     if conclusion in {None, "success"}:
@@ -265,7 +282,7 @@ def verify_public_state(entry: dict, manifest: dict, run_id: str, run_attempt: s
         if public is None or public["size"] != artifact["size"]:
             raise PublicationError(f"Public artifact metadata mismatch: {artifact['name']}")
         with tempfile.NamedTemporaryFile() as downloaded:
-            urllib.request.urlretrieve(artifact["url"], downloaded.name)
+            download_public_artifact(artifact["url"], Path(downloaded.name))
             if sha256(Path(downloaded.name)) != artifact["sha256"]:
                 raise PublicationError(f"Public artifact digest mismatch: {artifact['name']}")
 
