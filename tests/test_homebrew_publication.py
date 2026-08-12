@@ -6,6 +6,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
+import urllib.error
 from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
@@ -189,6 +190,46 @@ class PublicationContractTests(unittest.TestCase):
             {"name": "Verify public release and feeds", "conclusion": "success"},
             {"name": "Homebrew stable (arm64)", "conclusion": "cancelled"},
         ]))
+
+    def test_public_artifact_download_retries_transient_tls_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "artifact.dmg"
+            with (
+                patch.object(
+                    publication.urllib.request,
+                    "urlretrieve",
+                    side_effect=[urllib.error.URLError("temporary TLS failure"), None],
+                ) as retrieve,
+                patch.object(publication.time, "sleep") as sleep,
+            ):
+                publication.download_public_artifact(
+                    "https://example.test/artifact.dmg",
+                    destination,
+                )
+        self.assertEqual(2, retrieve.call_count)
+        sleep.assert_called_once_with(5)
+
+    def test_public_artifact_download_keeps_tls_verification_fail_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "artifact.dmg"
+            with (
+                patch.object(
+                    publication.urllib.request,
+                    "urlretrieve",
+                    side_effect=urllib.error.URLError("persistent TLS failure"),
+                ) as retrieve,
+                patch.object(publication.time, "sleep") as sleep,
+            ):
+                with self.assertRaisesRegex(
+                    publication.PublicationError,
+                    "failed after 4 attempts",
+                ):
+                    publication.download_public_artifact(
+                        "https://example.test/artifact.dmg",
+                        destination,
+                    )
+        self.assertEqual(4, retrieve.call_count)
+        self.assertEqual(3, sleep.call_count)
 
     def test_dispatch_workflow_serialises_each_product_and_is_secret_isolated(self):
         workflow = (ROOT / ".github/workflows/publish-homebrew.yml").read_text()
