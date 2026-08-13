@@ -53,6 +53,9 @@ jobs:
           token: ${{ github.token }}
           persist-credentials: true
 
+      - name: Verify scoped tap write authentication
+        run: git push --dry-run origin HEAD:main
+
       - name: Resolve product through reviewed registry
         id: registry
         env:
