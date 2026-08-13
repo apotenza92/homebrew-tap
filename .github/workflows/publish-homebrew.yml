@@ -22,7 +22,7 @@ on:
       correlation_id: {description: Unique source correlation ID, required: true, type: string}
 
 permissions:
-  contents: read
+  contents: write
   actions: read
   attestations: read
 
@@ -35,7 +35,6 @@ jobs:
     name: Validate, publish, and verify public casks
     runs-on: macos-15
     timeout-minutes: 45
-    environment: tap-publication
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       GH_TOKEN: ${{ github.token }}
@@ -47,21 +46,11 @@ jobs:
       SOURCE_RUN_ATTEMPT: ${{ inputs.source_run_attempt || github.event.client_payload.source_run_attempt }}
       CORRELATION_ID: ${{ inputs.correlation_id || github.event.client_payload.correlation_id }}
     steps:
-      - name: Mint tap-only publisher token
-        id: publisher
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          client-id: ${{ vars.HOMEBREW_PUBLISHER_CLIENT_ID }}
-          private-key: ${{ secrets.HOMEBREW_PUBLISHER_PRIVATE_KEY }}
-          owner: apotenza92
-          repositories: homebrew-tap
-          permission-contents: write
-
-      - name: Check out tap main with publisher identity
+      - name: Check out tap main
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           ref: main
-          token: ${{ steps.publisher.outputs.token }}
+          token: ${{ github.token }}
           persist-credentials: true
 
       - name: Resolve product through reviewed registry

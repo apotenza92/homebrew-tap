@@ -231,18 +231,19 @@ class PublicationContractTests(unittest.TestCase):
         self.assertEqual(4, retrieve.call_count)
         self.assertEqual(3, sleep.call_count)
 
-    def test_dispatch_workflow_serialises_each_product_and_is_secret_isolated(self):
+    def test_dispatch_workflow_serialises_each_product_and_uses_scoped_repository_token(self):
         workflow = (ROOT / ".github/workflows/publish-homebrew.yml").read_text()
         self.assertIn("group: homebrew-tap-publication-${{ inputs.product || github.event.client_payload.product }}", workflow)
-        self.assertIn("environment: tap-publication", workflow)
-        self.assertIn("HOMEBREW_PUBLISHER_PRIVATE_KEY", workflow)
-        self.assertIn("permission-contents: write", workflow)
-        self.assertIn("permissions:\n  contents: read", workflow)
+        self.assertNotIn("environment: tap-publication", workflow)
+        self.assertNotIn("HOMEBREW_PUBLISHER_PRIVATE_KEY", workflow)
+        self.assertNotIn("actions/create-github-app-token", workflow)
+        self.assertIn("permissions:\n  contents: write", workflow)
+        self.assertIn("token: ${{ github.token }}", workflow)
         self.assertNotIn("pull_request:", workflow)
 
-    def test_hourly_reconciliation_covers_all_products_and_is_fail_open_per_item(self):
+    def test_daily_reconciliation_covers_all_products_and_is_fail_open_per_item(self):
         workflow = (ROOT / ".github/workflows/reconcile-homebrew.yml").read_text()
-        self.assertIn('cron: "19 * * * *"', workflow)
+        self.assertIn('cron: "19 3 * * *"', workflow)
         self.assertIn("fail-fast: false", workflow)
         self.assertIn("max-parallel: 1", workflow)
         for product in self.registry["products"]:

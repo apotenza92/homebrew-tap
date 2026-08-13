@@ -3,7 +3,7 @@ name: Reconcile all Homebrew casks
 on:
   workflow_dispatch:
   schedule:
-    - cron: "19 * * * *"
+    - cron: "19 3 * * *"
 
 permissions:
   contents: read
