@@ -1,13 +1,13 @@
 cask "fraia" do
-  version "0.0.14"
+  version "0.0.15"
 
   on_arm do
-    sha256 "4dfeeb9a27c344fa3deda629e31e5ab98f75b04b5b560fa85099e2ea3192b930"
+    sha256 "29cdb9686cfe6773a7c18b686d6b7c78a714858b12d625d65d32dfe2aa2fdefb"
 
     url "https://github.com/apotenza92/fraia/releases/download/v#{version}/Fraia-macOS-arm64.zip"
   end
   on_intel do
-    sha256 "d9400e71f5fd752afc97bdaaf1dd6056d611b0022539493f6e2ef46cc24081ad"
+    sha256 "7d83c9fdb7386f35da6e7814095aae76d582deb4cef70618c77f0365dc08db6b"
 
     url "https://github.com/apotenza92/fraia/releases/download/v#{version}/Fraia-macOS-x64.zip"
   end
