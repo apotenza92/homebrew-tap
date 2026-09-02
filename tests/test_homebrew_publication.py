@@ -191,6 +191,41 @@ class PublicationContractTests(unittest.TestCase):
             {"name": "Homebrew stable (arm64)", "conclusion": "cancelled"},
         ]))
 
+    def test_dockmint_recovers_only_from_post_release_homebrew_failures(self):
+        run = {"id": 42, "status": "completed", "conclusion": "failure"}
+        required = [
+            {"name": name, "conclusion": "success"}
+            for name in (
+                "stage-draft-release",
+                "generate-signed-appcasts",
+                "publish-release",
+                "prepare-sparkle-publication",
+            )
+        ]
+        gates = [
+            {"name": f"sparkle-update-gate ({index})", "conclusion": "success"}
+            for index in range(4)
+        ]
+
+        def check(jobs):
+            with patch.object(publication, "gh_json", return_value={"jobs": jobs}):
+                return publication.source_run_is_publishable(
+                    "apotenza92/dockmint", run
+                )
+
+        self.assertTrue(check(required + gates + [
+            {"name": "prepare-homebrew-publication", "conclusion": "failure"}
+        ]))
+        self.assertTrue(check(required + gates + [
+            {"name": "validate-homebrew-casks (macos-15, arm64)", "conclusion": "failure"}
+        ]))
+        self.assertFalse(check(required + gates + [
+            {"name": "publish-release", "conclusion": "failure"}
+        ]))
+        self.assertFalse(check(required + gates[:3] + [
+            {"name": "prepare-homebrew-publication", "conclusion": "failure"}
+        ]))
+
     def test_public_artifact_download_retries_transient_tls_errors(self):
         with tempfile.TemporaryDirectory() as directory:
             destination = Path(directory) / "artifact.dmg"

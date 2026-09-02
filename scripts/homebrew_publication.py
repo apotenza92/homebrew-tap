@@ -246,11 +246,51 @@ def source_run_is_publishable(repository: str, workflow_run: dict) -> bool:
         (job for job in jobs if job.get("name") == "Verify public release and feeds"), None
     )
     failed_jobs = [job for job in jobs if job.get("conclusion") == "failure"]
-    return (
+    standard_recovery = (
         public_verification is not None
         and public_verification.get("conclusion") == "success"
         and bool(failed_jobs)
         and all(job.get("name", "").startswith("Homebrew ") for job in failed_jobs)
+    )
+    if standard_recovery:
+        return True
+
+    # Dockmint publishes only after all signed-package and native Sparkle gates
+    # pass. Its tap work is deliberately downstream of that publication, so a
+    # failure confined to Homebrew validation/bundle handoff is recoverable from
+    # the attested public bundle even though this workflow has no separate
+    # "Verify public release and feeds" job.
+    if repository != "apotenza92/dockmint" or not failed_jobs:
+        return False
+    required_successes = {
+        "stage-draft-release",
+        "generate-signed-appcasts",
+        "publish-release",
+        "prepare-sparkle-publication",
+    }
+    successful_names = {
+        job.get("name", "")
+        for job in jobs
+        if job.get("conclusion") == "success"
+    }
+    sparkle_gates = [
+        job
+        for job in jobs
+        if job.get("name", "").startswith("sparkle-update-gate (")
+    ]
+    allowed_failures = {
+        "prepare-homebrew-publication",
+        "dispatch-homebrew-publication",
+    }
+    return (
+        required_successes <= successful_names
+        and len(sparkle_gates) == 4
+        and all(job.get("conclusion") == "success" for job in sparkle_gates)
+        and all(
+            job.get("name", "").startswith("validate-homebrew-casks (")
+            or job.get("name", "") in allowed_failures
+            for job in failed_jobs
+        )
     )
 
 
