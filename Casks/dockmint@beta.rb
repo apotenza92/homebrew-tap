@@ -1,13 +1,13 @@
 cask "dockmint@beta" do
-  version "0.4.1"
+  version "0.4.2"
 
   on_arm do
-    sha256 "90c1db7b89e81a246bcbbf563a81264a8c2458c556ce514618dd9948b3722331"
+    sha256 "545441dc9fcee8d326404f6a3c412386674d78c025405b4be20c48aad0da024f"
 
     url "https://github.com/apotenza92/dockmint/releases/download/v#{version}/Dockmint-Beta-v#{version}-macos-arm64.zip"
   end
   on_intel do
-    sha256 "7af4e3c15a20a6269dddcd97a04aa440229ed33563f5ba44a641a03115ae71f0"
+    sha256 "d469f3e5d278cb6318e20b89dc0c28e829071add256f3341bee46690174dc9c7"
 
     url "https://github.com/apotenza92/dockmint/releases/download/v#{version}/Dockmint-Beta-v#{version}-macos-x64.zip"
   end
@@ -21,7 +21,7 @@ cask "dockmint@beta" do
     strategy :json do |json|
       json
         .reject { |release| release["draft"] }
-        .map { |release| release["tag_name"] }
+        .map { |release| release["tag_name"].delete_prefix("v") }
     end
   end
 
