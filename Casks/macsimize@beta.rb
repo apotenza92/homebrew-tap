@@ -1,13 +1,13 @@
 cask "macsimize@beta" do
-  version "0.3.8"
+  version "0.3.15"
 
   on_arm do
-    sha256 "d38f677f931de8ddccefed78997af1e8767f9179dceab30991a2048ab3f4d454"
+    sha256 "759c3d848bc2970745bde10fc9cdaa0121e965616822fbcd3a66b06d563ea7c7"
 
     url "https://github.com/apotenza92/macsimize/releases/download/v#{version}/Macsimize-Beta-v#{version}-macos-arm64.zip"
   end
   on_intel do
-    sha256 "1a1fd284bf38abdd8aff352682521beae53bf54b07e1e0a884a733adac14bec8"
+    sha256 "6c7ce191b7c5774900015667fc0d464f06424741c2b0434ba8689f4f1925de22"
 
     url "https://github.com/apotenza92/macsimize/releases/download/v#{version}/Macsimize-Beta-v#{version}-macos-x64.zip"
   end
@@ -21,7 +21,7 @@ cask "macsimize@beta" do
     strategy :json do |json|
       json
         .reject { |release| release["draft"] }
-        .map { |release| release["tag_name"] }
+        .map { |release| release["tag_name"].delete_prefix("v") }
     end
   end
 
