@@ -66,6 +66,34 @@
       "minimum_macos": "12.0",
       "stable_advances_beta": true
     },
+    "simple-mac-keyboard-control": {
+      "repository": "apotenza92/simple-mac-keyboard-control",
+      "workflow": ".github/workflows/release.yml",
+      "stable_cask": "simple-mac-keyboard-control.rb",
+      "beta_cask": "simple-mac-keyboard-control@beta.rb",
+      "tag_patterns": {
+        "stable": "^v[0-9]+\\.[0-9]+\\.[0-9]+$",
+        "beta": "^v[0-9]+\\.[0-9]+\\.[0-9]+-beta\\.[1-9][0-9]*$"
+      },
+      "applications": {
+        "stable": "Simple Mac Keyboard Control.app",
+        "beta": "Simple Mac Keyboard Control Beta.app"
+      },
+      "bundle_identifiers": {
+        "stable": "com.apotenza.KeyControl",
+        "beta": "com.apotenza.KeyControl.beta"
+      },
+      "artifact_patterns": {
+        "stable": "^Simple-Mac-Keyboard-Control-v[0-9].*-macos-(arm64|x64)\\.zip$",
+        "beta": "^Simple-Mac-Keyboard-Control-Beta-v[0-9].*-macos-(arm64|x64)\\.zip$"
+      },
+      "architectures": [
+        "arm64",
+        "x64"
+      ],
+      "minimum_macos": "14.4",
+      "stable_advances_beta": true
+    },
     "fraia": {
       "repository": "apotenza92/fraia",
       "workflow": ".github/workflows/release.yml",

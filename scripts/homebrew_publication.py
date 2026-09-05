@@ -64,8 +64,8 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict:
             re.compile(entry["artifact_patterns"][channel])
             if not entry["applications"][channel].endswith(".app"):
                 raise PublicationError(f"Application identity is invalid: {product}/{channel}")
-    if len(data["products"]) != 6:
-        raise PublicationError("Registry must contain exactly six products")
+    if len(data["products"]) != 7:
+        raise PublicationError("Registry must contain exactly seven products")
     return data
 
 

@@ -21,11 +21,11 @@ class PublicationContractTests(unittest.TestCase):
     def setUp(self):
         self.registry = publication.load_registry()
 
-    def test_registry_owns_exactly_twelve_distinct_casks(self):
+    def test_registry_owns_exactly_fourteen_distinct_casks(self):
         products = self.registry["products"]
-        self.assertEqual(6, len(products))
+        self.assertEqual(7, len(products))
         casks = [entry[key] for entry in products.values() for key in ("stable_cask", "beta_cask")]
-        self.assertEqual(12, len(set(casks)))
+        self.assertEqual(14, len(set(casks)))
         self.assertEqual(["arm64"], products["caul"]["architectures"])
 
     def test_registry_rejects_duplicate_cask_ownership(self):

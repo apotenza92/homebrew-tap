@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        product: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia]
+        product: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia, simple-mac-keyboard-control]
         channel: [stable, beta]
     uses: ./.github/workflows/reconcile-product.yml
     with:
