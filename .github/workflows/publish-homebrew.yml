@@ -14,7 +14,7 @@ on:
     types: [publish-homebrew-v1]
   workflow_dispatch:
     inputs:
-      product: {description: Product registry key, required: true, type: choice, options: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia]}
+      product: {description: Product registry key, required: true, type: choice, options: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia, simple-mac-keyboard-control]}
       tag: {description: Exact public release tag, required: true, type: string}
       release_commit: {description: Exact release commit, required: true, type: string}
       source_run_id: {description: Source release workflow run ID, required: true, type: string}
