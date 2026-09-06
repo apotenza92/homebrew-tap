@@ -1,13 +1,13 @@
 cask "simple-mac-keyboard-control" do
-  version "0.1.1"
+  version "0.1.2"
 
   on_arm do
-    sha256 "2b1c483cb605fb81a0e3f4afb4f4c556e6ff201213dee4203189bcea990897fd"
+    sha256 "204e1b97e6e307cd1173d3efa341739b35a0b7bd0923d5bcc0356ec5a3985de6"
 
     url "https://github.com/apotenza92/simple-mac-keyboard-control/releases/download/v#{version}/Simple-Mac-Keyboard-Control-v#{version}-macos-arm64.zip"
   end
   on_intel do
-    sha256 "d8d5228ee66db6eee0828faef6d52145891f8aee8c2f397711c99b8d541b9dc4"
+    sha256 "14ade218e26c2095bca931023f00128f281236de94a9631de5ea905030c85b77"
 
     url "https://github.com/apotenza92/simple-mac-keyboard-control/releases/download/v#{version}/Simple-Mac-Keyboard-Control-v#{version}-macos-x64.zip"
   end
