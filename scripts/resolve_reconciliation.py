@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import urllib.parse
 from pathlib import Path
@@ -26,10 +27,23 @@ def emit(result: dict[str, object]) -> None:
                 output.write(f"{key}={str(value).lower() if isinstance(value, bool) else value}\n")
 
 
+def already_current(entry, channel, tag):
+    keys = ['beta_cask'] if channel == 'beta' else ['stable_cask', 'beta_cask']
+    for key in keys:
+        path = Path('Casks') / entry[key]
+        if not path.exists():
+            return False
+        match = re.search(r'^  version "([^"\n]+)"$', path.read_text(), re.MULTILINE)
+        if not match or parse_version('v' + match[1]) < parse_version(tag):
+            return False
+    return True
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--product", required=True)
     parser.add_argument("--channel", required=True, choices=("stable", "beta"))
+    parser.add_argument("--skip-current", action="store_true")
     args = parser.parse_args()
     entry = load_registry()["products"].get(args.product)
     if entry is None:
@@ -44,6 +58,9 @@ def main() -> None:
         return
     release = max(candidates, key=lambda item: parse_version(item["tag_name"]))
     tag = release["tag_name"]
+    if args.skip_current and already_current(entry, args.channel, tag):
+        emit({"eligible": False, "reason": "already-current", "tag": tag})
+        return
     ref = gh(f"repos/{entry['repository']}/git/ref/tags/{urllib.parse.quote(tag, safe='')}")["object"]
     commit = ref["sha"]
     if ref["type"] == "tag":

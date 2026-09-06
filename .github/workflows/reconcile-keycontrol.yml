@@ -1,0 +1,29 @@
+name: Reconcile KeyControl releases
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,17,27,37,47,57 * * * *'
+permissions:
+  contents: read
+  actions: read
+  attestations: read
+concurrency:
+  group: reconcile-keycontrol
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    permissions:
+      contents: write
+      actions: read
+      attestations: read
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        channel: [stable, beta]
+    uses: ./.github/workflows/reconcile-product.yml
+    with:
+      product: simple-mac-keyboard-control
+      channel: ${{ matrix.channel }}
+      skip_current: true
+    secrets: inherit

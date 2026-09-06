@@ -19,7 +19,7 @@ python3 scripts/homebrew_publication.py \
 ruby -c "Casks/${STABLE_CASK:?}"
 ruby -c "Casks/${BETA_CASK:?}"
 brew style "Casks/$STABLE_CASK" "Casks/$BETA_CASK"
-brew audit --cask --strict --online "apotenza92/tap/${STABLE_CASK%.rb}" "apotenza92/tap/${BETA_CASK%.rb}"
+python3 scripts/audit_with_retry.py "apotenza92/tap/${STABLE_CASK%.rb}" "apotenza92/tap/${BETA_CASK%.rb}"
 git diff --check -- Casks
 
 changed=()

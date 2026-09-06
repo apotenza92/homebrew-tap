@@ -1,12 +1,17 @@
 name: Test Homebrew publication contract
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
   pull_request:
     paths:
       - homebrew-products.json
       - scripts/homebrew_publication.py
       - scripts/publish-homebrew.sh
+      - scripts/audit_with_retry.py
+      - tests/test_release_reliability.py
+      - .github/workflows/reconcile-keycontrol.yml
       - scripts/resolve_reconciliation.py
       - tests/test_homebrew_publication.py
       - .github/workflows/publish-homebrew.yml
