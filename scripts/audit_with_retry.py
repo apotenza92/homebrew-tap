@@ -41,7 +41,7 @@ def authenticated_curl_env():
     if not token:
         yield env
         return
-    if not re.fullmatch(r'[A-Za-z0-9_]+', token):
+    if not re.fullmatch(r'[A-Za-z0-9_.~+/=-]+', token):
         raise ValueError('Invalid GitHub API token format')
     with tempfile.TemporaryDirectory(prefix='homebrew-audit-') as directory:
         netrc = Path(directory) / 'netrc'
