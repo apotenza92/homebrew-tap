@@ -1,13 +1,13 @@
 cask "butter-paper@beta" do
-  version "0.0.25"
+  version "0.1.0"
 
   on_arm do
-    sha256 "f22ebe95bc88e5b7fb1900963cac242f544cc50315e39f5f2073cb4da66acffe"
+    sha256 "a12afeb7a086365f73ea93a7fec24d12d5e10237ed1eb93b3a395c9cd90ba8b9"
 
     url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-Beta-macOS-arm64.zip"
   end
   on_intel do
-    sha256 "12fbde5170050d78faa525e7019c12046b01755f93de0d598bb42c4644c072d7"
+    sha256 "88d0ddb4d9e5e4a8fafcd65f34f239735e3683c5a2a4340a13c79a432b90d25a"
 
     url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-Beta-macOS-x64.zip"
   end
@@ -21,14 +21,14 @@ cask "butter-paper@beta" do
   end
 
   auto_updates true
-  depends_on macos: :monterey
+  depends_on macos: :ventura
 
   app "Butter Paper Beta.app"
 
   zap trash: [
     "~/Library/Application Support/Butter Paper Beta",
+    "~/Library/Application Support/com.butterpaper.desktop.beta",
     "~/Library/Caches/com.butterpaper.desktop.beta",
-    "~/Library/Caches/com.butterpaper.desktop.beta.ShipIt",
     "~/Library/Preferences/com.butterpaper.desktop.beta.plist",
     "~/Library/Saved Application State/com.butterpaper.desktop.beta.savedState",
   ]
