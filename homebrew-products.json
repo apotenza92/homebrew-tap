@@ -11,7 +11,7 @@
       "bundle_identifiers": {"stable": "com.butterpaper.desktop", "beta": "com.butterpaper.desktop.beta"},
       "artifact_patterns": {"stable": "^Butter-Paper-macOS-(arm64|x64)\\.zip$", "beta": "^Butter-Paper-Beta-macOS-(arm64|x64)\\.zip$"},
       "architectures": ["arm64", "x64"],
-      "minimum_macos": "12.0",
+      "minimum_macos": "13.0",
       "stable_advances_beta": true
     },
     "caul": {
