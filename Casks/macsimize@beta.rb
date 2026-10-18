@@ -25,6 +25,10 @@ cask "macsimize@beta" do
     end
   end
 
+  deprecate! date:             "2026-10-18",
+             because:          "has been replaced by Simple Mac Fixes",
+             replacement_cask: "simple-mac-fixes"
+
   depends_on macos: :sonoma
 
   app "Macsimize Beta.app"

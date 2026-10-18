@@ -25,6 +25,10 @@ cask "simple-mac-keyboard-control@beta" do
     end
   end
 
+  deprecate! date:             "2026-10-18",
+             because:          "has been replaced by Simple Mac Fixes",
+             replacement_cask: "simple-mac-fixes"
+
   auto_updates true
   depends_on macos: :sonoma
 
