@@ -36,6 +36,11 @@ def run(*args: str, cwd: Path | None = None, capture: bool = True) -> str:
     return result.stdout.strip() if capture else ""
 
 
+def product_channels(entry: dict) -> list[str]:
+    """Stable always; beta only for products that ship one."""
+    return ["stable", "beta"] if entry["beta_cask"] is not None else ["stable"]
+
+
 def load_registry(path: Path = REGISTRY_PATH) -> dict:
     data = json.loads(path.read_text())
     if data.get("schema_version") != SCHEMA_VERSION or set(data) != {"schema_version", "products"}:
@@ -51,21 +56,26 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict:
         if entry["repository"] in repositories:
             raise PublicationError("Source repositories must be unique")
         repositories.add(entry["repository"])
-        for field in ("stable_cask", "beta_cask"):
+        if entry["beta_cask"] is None and entry["stable_advances_beta"]:
+            raise PublicationError(f"Stable-only product cannot advance beta: {product}")
+        for field in ("stable_cask", "beta_cask")[:len(product_channels(entry))]:
             name = entry[field]
-            if not re.fullmatch(r"[a-z0-9@-]+\.rb", name) or name in casks:
+            if not isinstance(name, str) or not re.fullmatch(r"[a-z0-9@-]+\.rb", name) or name in casks:
                 raise PublicationError(f"Cask ownership is invalid: {name}")
             casks.add(name)
         if (not entry["architectures"] or len(set(entry["architectures"])) != len(entry["architectures"])
                 or any(architecture not in {"arm64", "x64"} for architecture in entry["architectures"])):
             raise PublicationError(f"Architecture contract is invalid: {product}")
-        for channel in ("stable", "beta"):
+        for field in ("tag_patterns", "applications", "bundle_identifiers", "artifact_patterns"):
+            if set(entry[field]) != set(product_channels(entry)):
+                raise PublicationError(f"Channel contract is invalid: {product}/{field}")
+        for channel in product_channels(entry):
             re.compile(entry["tag_patterns"][channel])
             re.compile(entry["artifact_patterns"][channel])
             if not entry["applications"][channel].endswith(".app"):
                 raise PublicationError(f"Application identity is invalid: {product}/{channel}")
-    if len(data["products"]) != 7:
-        raise PublicationError("Registry must contain exactly seven products")
+    if len(data["products"]) != 8:
+        raise PublicationError("Registry must contain exactly eight products")
     return data
 
 
@@ -157,6 +167,8 @@ def validate_manifest(root: Path, product: str, tag: str, commit: str, registry:
     if manifest["release_tag"] != tag or manifest["release_commit"] != commit or not COMMIT.fullmatch(commit):
         raise PublicationError("Manifest release identity mismatch")
     channel = "beta" if "-beta." in tag else "stable"
+    if channel not in product_channels(entry):
+        raise PublicationError("Product has no beta channel")
     if manifest["channel"] != channel or not re.fullmatch(entry["tag_patterns"][channel], tag):
         raise PublicationError("Tag and channel mismatch")
     expected_casks = [entry["beta_cask"]] if channel == "beta" else [entry["stable_cask"]]

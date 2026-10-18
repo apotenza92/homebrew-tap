@@ -12,6 +12,7 @@ on:
       - scripts/audit_with_retry.py
       - tests/test_release_reliability.py
       - .github/workflows/reconcile-keycontrol.yml
+      - .github/workflows/reconcile-simple-mac-fixes.yml
       - scripts/resolve_reconciliation.py
       - tests/test_homebrew_publication.py
       - .github/workflows/publish-homebrew.yml

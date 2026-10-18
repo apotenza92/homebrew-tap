@@ -1,0 +1,24 @@
+name: Reconcile Simple Mac Fixes releases
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '2,12,22,32,42,52 * * * *'
+permissions:
+  contents: read
+  actions: read
+  attestations: read
+concurrency:
+  group: reconcile-simple-mac-fixes
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    permissions:
+      contents: write
+      actions: read
+      attestations: read
+    uses: ./.github/workflows/reconcile-product.yml
+    with:
+      product: simple-mac-fixes
+      channel: stable
+      skip_current: true
+    secrets: inherit

@@ -21,6 +21,7 @@ brew install --cask apotenza92/tap/fraia
 brew install --cask apotenza92/tap/fraia@beta
 brew install --cask apotenza92/tap/facebook-messenger-desktop
 brew install --cask apotenza92/tap/facebook-messenger-desktop@beta
+brew install --cask apotenza92/tap/simple-mac-fixes
 ```
 
 ## Upgrade casks
@@ -50,7 +51,9 @@ brew uninstall --cask <cask-name>
   before the casks are updated.
 - Stable releases may advance both stable and beta casks when the source
   product's reviewed release contract permits it.
-- Use `@beta` tokens when a beta channel cask is available.
+- Use `@beta` tokens when a beta channel cask is available. Products with
+  `"beta_cask": null` in `homebrew-products.json` (Simple Mac Fixes) are
+  stable only; beta tags are rejected for them.
 
 ### KeyControl release reconciliation
 
@@ -59,6 +62,7 @@ schedule jobs late). Current cask versions skip the publishing job; new eligible
 releases still pass the source-run, provenance, package and audit checks in the
 existing publisher. The app repository never receives tap write credentials.
 Manual dispatch of this workflow provides recovery without reconstructing inputs.
+`reconcile-simple-mac-fixes.yml` does the same for Simple Mac Fixes, stable only.
 
 Online audits retry only network/rate-limit failures, at most twice with 30/90
 second backoff. Response/rate-limit diagnostics omit request credentials and

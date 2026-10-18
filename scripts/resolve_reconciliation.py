@@ -30,6 +30,8 @@ def emit(result: dict[str, object]) -> None:
 def already_current(entry, channel, tag):
     keys = ['beta_cask'] if channel == 'beta' else ['stable_cask', 'beta_cask']
     for key in keys:
+        if entry[key] is None:
+            continue
         path = Path('Casks') / entry[key]
         if not path.exists():
             return False
@@ -48,6 +50,10 @@ def main() -> None:
     entry = load_registry()["products"].get(args.product)
     if entry is None:
         raise PublicationError("Unknown product")
+    if args.channel == "beta" and entry["beta_cask"] is None:
+        emit({"eligible": False, "product": args.product, "channel": args.channel,
+              "reason": "no-beta-channel"})
+        return
     releases = gh(f"repos/{entry['repository']}/releases?per_page=100")
     candidates = [release for release in releases if not release["draft"]
                   and bool(release["prerelease"]) == (args.channel == "beta")

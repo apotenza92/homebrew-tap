@@ -16,10 +16,17 @@ python3 scripts/homebrew_publication.py \
   --correlation "${CORRELATION_ID:?}" \
   --apply | tee "$summary_file"
 
-ruby -c "Casks/${STABLE_CASK:?}"
-ruby -c "Casks/${BETA_CASK:?}"
-brew style "Casks/$STABLE_CASK" "Casks/$BETA_CASK"
-python3 scripts/audit_with_retry.py "apotenza92/tap/${STABLE_CASK%.rb}" "apotenza92/tap/${BETA_CASK%.rb}"
+# Stable-only products have no beta cask.
+casks=("${STABLE_CASK:?}")
+[[ -n "${BETA_CASK:-}" ]] && casks+=("$BETA_CASK")
+cask_paths=() tokens=()
+for cask in "${casks[@]}"; do
+  ruby -c "Casks/$cask"
+  cask_paths+=("Casks/$cask")
+  tokens+=("apotenza92/tap/${cask%.rb}")
+done
+brew style "${cask_paths[@]}"
+python3 scripts/audit_with_retry.py "${tokens[@]}"
 git diff --check -- Casks
 
 changed=()

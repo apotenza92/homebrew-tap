@@ -50,5 +50,8 @@ class ReliabilityTests(unittest.TestCase):
                 self.assertTrue(already_current(entry, 'stable', 'v0.1.2'))
                 self.assertFalse(already_current(entry, 'stable', 'v0.1.3'))
                 self.assertTrue(already_current(entry, 'beta', 'v0.2.0-beta.1'))
+                stable_only = dict(stable_cask='stable.rb', beta_cask=None)
+                self.assertTrue(already_current(stable_only, 'stable', 'v0.1.2'))
+                self.assertFalse(already_current(stable_only, 'stable', 'v0.1.3'))
             finally:
                 os.chdir(previous)

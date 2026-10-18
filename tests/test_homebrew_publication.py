@@ -21,12 +21,75 @@ class PublicationContractTests(unittest.TestCase):
     def setUp(self):
         self.registry = publication.load_registry()
 
-    def test_registry_owns_exactly_fourteen_distinct_casks(self):
+    def test_registry_owns_exactly_fifteen_distinct_casks(self):
         products = self.registry["products"]
-        self.assertEqual(7, len(products))
-        casks = [entry[key] for entry in products.values() for key in ("stable_cask", "beta_cask")]
-        self.assertEqual(14, len(set(casks)))
+        self.assertEqual(8, len(products))
+        casks = [entry[key] for entry in products.values() for key in ("stable_cask", "beta_cask") if entry[key]]
+        self.assertEqual(15, len(set(casks)))
         self.assertEqual(["arm64"], products["caul"]["architectures"])
+        self.assertEqual(["stable"], publication.product_channels(products["simple-mac-fixes"]))
+
+    def test_registry_rejects_stable_only_products_with_beta_fields(self):
+        for mutate in (
+            lambda entry: entry.update(stable_advances_beta=True),
+            lambda entry: entry["tag_patterns"].update(beta="^v.*$"),
+        ):
+            data = json.loads((ROOT / "homebrew-products.json").read_text())
+            mutate(data["products"]["simple-mac-fixes"])
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "registry.json"
+                path.write_text(json.dumps(data))
+                with self.assertRaises(publication.PublicationError):
+                    publication.load_registry(path)
+
+    def build_stable_only_bundle(self, tag="v0.0.4"):
+        temporary = tempfile.TemporaryDirectory()
+        root = Path(temporary.name)
+        (root / "Casks").mkdir()
+        entry = self.registry["products"]["simple-mac-fixes"]
+        (root / "Casks" / "simple-mac-fixes.rb").write_text(
+            f'cask "simple-mac-fixes" do\n  version "{tag[1:]}"\n'
+            f'  url "https://github.com/{entry["repository"]}/releases/download/v#{{version}}/Simple-Mac-Fixes-v#{{version}}-macos-arm64.zip"\nend\n'
+        )
+        artifacts = []
+        for arch in entry["architectures"]:
+            name = f"Simple-Mac-Fixes-{tag}-macos-{arch}.zip"
+            artifacts.append({"name": name, "url": f"https://github.com/{entry['repository']}/releases/download/{tag}/{name}",
+                              "size": 1, "sha256": "b" * 64, "channel": "stable", "architecture": arch})
+        manifest = {
+            "schema_version": 1, "product": "simple-mac-fixes", "source_repository": entry["repository"],
+            "release_tag": tag, "release_commit": "a" * 40, "channel": "stable", "casks": ["simple-mac-fixes.rb"],
+            "artifacts": artifacts, "applications": entry["applications"], "bundle_identifiers": entry["bundle_identifiers"],
+            "architectures": entry["architectures"], "minimum_macos": entry["minimum_macos"],
+            "native_validation": {"workflow_run_id": 12, "workflow_run_attempt": 1, "jobs": ["arm64", "x64"]},
+        }
+        (root / "manifest.json").write_text(json.dumps(manifest, sort_keys=True))
+        (root / "SHA256SUMS").write_text("".join(
+            f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(root)}\n"
+            for path in [root / "manifest.json", root / "Casks" / "simple-mac-fixes.rb"]
+        ))
+        return temporary, root
+
+    def test_stable_only_product_publishes_just_its_stable_cask(self):
+        temporary, root = self.build_stable_only_bundle()
+        self.addCleanup(temporary.cleanup)
+        manifest, casks = publication.validate_manifest(root, "simple-mac-fixes", "v0.0.4", "a" * 40, self.registry)
+        self.assertEqual(["simple-mac-fixes.rb"], casks)
+        self.assertEqual({"stable": "Simple Mac Fixes.app"}, manifest["applications"])
+
+    def test_stable_only_product_rejects_beta_tags(self):
+        temporary, root = self.build_stable_only_bundle("v0.0.4-beta.1")
+        self.addCleanup(temporary.cleanup)
+        with self.assertRaisesRegex(publication.PublicationError, "no beta channel"):
+            publication.validate_manifest(root, "simple-mac-fixes", "v0.0.4-beta.1", "a" * 40, self.registry)
+
+    def test_reconciliation_skips_beta_for_stable_only_products(self):
+        output = io.StringIO()
+        with patch.object(reconciliation, "gh", side_effect=AssertionError("no lookup needed")), \
+             patch.object(sys, "argv", ["resolve_reconciliation.py", "--product", "simple-mac-fixes", "--channel", "beta"]), \
+             patch.dict(os.environ, {}, clear=True), redirect_stdout(output):
+            reconciliation.main()
+        self.assertEqual("no-beta-channel", json.loads(output.getvalue())["reason"])
 
     def test_registry_rejects_duplicate_cask_ownership(self):
         data = json.loads((ROOT / "homebrew-products.json").read_text())
