@@ -19,14 +19,17 @@ python3 scripts/homebrew_publication.py \
 # Stable-only products have no beta cask.
 casks=("${STABLE_CASK:?}")
 [[ -n "${BETA_CASK:-}" ]] && casks+=("$BETA_CASK")
-cask_paths=() tokens=()
+cask_paths=()
 for cask in "${casks[@]}"; do
   ruby -c "Casks/$cask"
   cask_paths+=("Casks/$cask")
-  tokens+=("apotenza92/tap/${cask%.rb}")
 done
 brew style "${cask_paths[@]}"
-python3 scripts/audit_with_retry.py "${tokens[@]}"
+python3 scripts/audit_with_retry.py "apotenza92/tap/${STABLE_CASK%.rb}"
+# Beta casks point at GitHub pre-releases by design; every other check stays.
+if [[ -n "${BETA_CASK:-}" ]]; then
+  python3 scripts/audit_with_retry.py --except=github_prerelease_version "apotenza92/tap/${BETA_CASK%.rb}"
+fi
 git diff --check -- Casks
 
 changed=()
