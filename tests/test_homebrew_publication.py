@@ -388,6 +388,19 @@ class PublicationContractTests(unittest.TestCase):
         ):
             self.assertFalse(path.exists(), path)
 
+    def test_only_beta_casks_may_point_at_github_prereleases(self):
+        # Beta casks track GitHub pre-releases by design; brew audit rejects
+        # those unless that one check is skipped, and stable casks keep it.
+        script = (ROOT / "scripts/publish-homebrew.sh").read_text()
+        audits = [line for line in script.splitlines() if "audit_with_retry.py" in line]
+        stable = [line for line in audits if "STABLE_CASK" in line]
+        beta = [line for line in audits if "BETA_CASK" in line]
+        self.assertEqual(len(stable), 1, audits)
+        self.assertEqual(len(beta), 1, audits)
+        self.assertNotIn("--except", stable[0])
+        self.assertIn("--except=github_prerelease_version", beta[0])
+        self.assertEqual(len(audits), 2, audits)
+
 
 if __name__ == "__main__":
     unittest.main()
