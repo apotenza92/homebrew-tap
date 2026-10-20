@@ -1,13 +1,13 @@
 cask "simple-mac-fixes" do
-  version "0.0.6"
+  version "0.0.7"
 
   on_arm do
-    sha256 "8a7a5b1ba895e0b4adee9d6024e0283efae6ddadd7ad5da7ac80e7f6f0eaf23a"
+    sha256 "563fc77e37b496a6032fb730ed4e8225d7a7a54b646b8f725e3a13ac8c64ca0f"
 
     url "https://github.com/apotenza92/simple-mac-fixes/releases/download/v#{version}/Simple-Mac-Fixes-v#{version}-macos-arm64.zip"
   end
   on_intel do
-    sha256 "5495a5d8918d3f4bf4ad8dad09f61d88b271c2bdea02b3b30d2e99c26f61dc1c"
+    sha256 "36ca8948d305edcc480d78b63d5e7aa3e024b33cd26eef3d833794c8c3a186c2"
 
     url "https://github.com/apotenza92/simple-mac-fixes/releases/download/v#{version}/Simple-Mac-Fixes-v#{version}-macos-x64.zip"
   end
