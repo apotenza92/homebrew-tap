@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        product: [butter-paper, caul, dockmint, macsimize, facebook-messenger-desktop, fraia, simple-mac-keyboard-control, simple-mac-fixes]
+        product: [butter-paper, caul, dockmint, facebook-messenger-desktop, fraia, simple-mac-fixes]
         channel: [stable, beta]
         exclude:
           # Stable-only product.
