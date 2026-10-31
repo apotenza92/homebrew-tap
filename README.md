@@ -6,7 +6,10 @@ Homebrew tap for desktop applications published by `apotenza92`.
 
 ```bash
 brew tap apotenza92/tap
+brew trust --tap apotenza92/tap
 ```
+
+Homebrew 7 and later only loads casks from third-party taps you have trusted.
 
 ## Install a cask
 

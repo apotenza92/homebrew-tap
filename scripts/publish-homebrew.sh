@@ -6,6 +6,8 @@ summary_file="${RUNNER_TEMP:?}/homebrew-publication-summary.json"
 tap_path="$(brew --repository)/Library/Taps/apotenza92/homebrew-tap"
 mkdir -p "$(dirname "$tap_path")"
 if [[ ! -e "$tap_path" ]]; then ln -s "$GITHUB_WORKSPACE" "$tap_path"; fi
+# Homebrew 7 refuses to load casks from untrusted third-party taps.
+brew trust --tap apotenza92/tap
 
 python3 scripts/homebrew_publication.py \
   --product "${PRODUCT:?}" \
