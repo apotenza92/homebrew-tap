@@ -1,19 +1,19 @@
 cask "butter-paper" do
-  version "0.3.6"
+  version "0.3.7"
 
   on_arm do
-    sha256 "7cc64f7e99a068376889d10b1811ce1112294ec60047e6332ddb1a962d3f8922"
+    sha256 "d911d4d6e1ad4ec5488fd63637a69736a6e8f191863f1f2aa91e5b0772153658"
 
     url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-macOS-arm64.zip"
   end
   on_intel do
-    sha256 "c32c1c7224c0c8d1dffaacc6bcd03ca282efb00e0f15eb61792890f5f3a1bce8"
+    sha256 "bb05857d1d47211e347e63616e9cced26ea3610b0488bae32ecaf2df7266a481"
 
     url "https://github.com/apotenza92/butter-paper/releases/download/v#{version}/Butter-Paper-macOS-x64.zip"
   end
 
   name "Butter Paper"
-  desc "Cross-platform PDF editing and markup"
+  desc "PDF editing and markup"
   homepage "https://github.com/apotenza92/butter-paper"
 
   livecheck do
